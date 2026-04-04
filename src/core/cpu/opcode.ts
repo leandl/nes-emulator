@@ -73,7 +73,8 @@ export enum Opcode {
   SET_CARRY_FLAG = 0x38,
   CLEAR_CARRY_FLAG = 0x18,
 
-  // System
+  // Other
+  //// System
   NO_OPERATION = 0xea,
 }
 
@@ -138,3 +139,5 @@ export type ArithmeticOpcode =
   // Decrement
   | Opcode.DECREMENT_X_REGISTER
   | Opcode.DECREMENT_Y_REGISTER;
+
+export type OtherOpcode = Opcode.NO_OPERATION;
