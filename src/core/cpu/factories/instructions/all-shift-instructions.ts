@@ -1,0 +1,56 @@
+import { Opcode, ShiftOpcode } from "../../opcode";
+import { Instruction } from "../../instructions/instruction";
+import { ArithmeticShiftLeftInstruction } from "../../instructions/arithmetic-shift-left-instruction";
+import { CPURegister } from "../../registers";
+import { Addressing } from "../../addressing";
+import { LogicalShiftRightInstruction } from "../../instructions/logical-shift-right-instruction";
+
+export const allShiftInstructions: Record<ShiftOpcode, Instruction> = {
+  // Arithmetic Shift Left
+  [Opcode.ARITHMETIC_SHIFT_LEFT_ACCUMULATOR]:
+    new ArithmeticShiftLeftInstruction({
+      mode: "REGISTER",
+      register: CPURegister.ACCUMULATOR,
+    }),
+  [Opcode.ARITHMETIC_SHIFT_LEFT_ZERO_PAGE]: new ArithmeticShiftLeftInstruction({
+    mode: "MEMORY",
+    getAddress: Addressing.zeroPage,
+  }),
+  [Opcode.ARITHMETIC_SHIFT_LEFT_ZERO_PAGE_X]:
+    new ArithmeticShiftLeftInstruction({
+      mode: "MEMORY",
+      getAddress: Addressing.zeroPageX,
+    }),
+  [Opcode.ARITHMETIC_SHIFT_LEFT_ABSOLUTE]: new ArithmeticShiftLeftInstruction({
+    mode: "MEMORY",
+    getAddress: Addressing.absolute,
+  }),
+  [Opcode.ARITHMETIC_SHIFT_LEFT_ABSOLUTE_X]: new ArithmeticShiftLeftInstruction(
+    {
+      mode: "MEMORY",
+      getAddress: Addressing.absoluteX,
+    },
+  ),
+
+  // Logical Shift Right
+  [Opcode.LOGICAL_SHIFT_RIGHT_ACCUMULATOR]: new LogicalShiftRightInstruction({
+    mode: "REGISTER",
+    register: CPURegister.ACCUMULATOR,
+  }),
+  [Opcode.LOGICAL_SHIFT_RIGHT_ZERO_PAGE]: new LogicalShiftRightInstruction({
+    mode: "MEMORY",
+    getAddress: Addressing.zeroPage,
+  }),
+  [Opcode.LOGICAL_SHIFT_RIGHT_ZERO_PAGE_X]: new LogicalShiftRightInstruction({
+    mode: "MEMORY",
+    getAddress: Addressing.zeroPageX,
+  }),
+  [Opcode.LOGICAL_SHIFT_RIGHT_ABSOLUTE]: new LogicalShiftRightInstruction({
+    mode: "MEMORY",
+    getAddress: Addressing.absolute,
+  }),
+  [Opcode.LOGICAL_SHIFT_RIGHT_ABSOLUTE_X]: new LogicalShiftRightInstruction({
+    mode: "MEMORY",
+    getAddress: Addressing.absoluteX,
+  }),
+};

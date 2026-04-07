@@ -9,6 +9,7 @@ import { allAccessInstructions } from "./all-access-instructions";
 import { allArithmeticInstructions } from "./all-arithmetic-instructions";
 import { allOtherInstructions } from "./all-other-instructions";
 import { allTransferInstructions } from "./all-transfer-instruction";
+import { allShiftInstructions } from "./all-shift-instructions";
 
 export const allInstruction: Record<Opcode, Instruction> = {
   // Access
@@ -19,6 +20,9 @@ export const allInstruction: Record<Opcode, Instruction> = {
 
   // Arithmetic
   ...allArithmeticInstructions,
+
+  // Shift
+  ...allShiftInstructions,
 
   // Jump
   [Opcode.JUMP_ABSOLUTE]: new JumpInstruction(Addressing.absolute),
