@@ -4,6 +4,8 @@ import { ArithmeticShiftLeftInstruction } from "../../instructions/arithmetic-sh
 import { CPURegister } from "../../registers";
 import { Addressing } from "../../addressing";
 import { LogicalShiftRightInstruction } from "../../instructions/logical-shift-right-instruction";
+import { RotateLeftInstruction } from "../../instructions/rotate-left-instruction";
+import { RotateRightInstruction } from "../../instructions/rotate-right-instruction";
 
 export const allShiftInstructions: Record<ShiftOpcode, Instruction> = {
   // Arithmetic Shift Left
@@ -50,6 +52,50 @@ export const allShiftInstructions: Record<ShiftOpcode, Instruction> = {
     getAddress: Addressing.absolute,
   }),
   [Opcode.LOGICAL_SHIFT_RIGHT_ABSOLUTE_X]: new LogicalShiftRightInstruction({
+    mode: "MEMORY",
+    getAddress: Addressing.absoluteX,
+  }),
+
+  // Rotate Left
+  [Opcode.ROTATE_LEFT_ACCUMULATOR]: new RotateLeftInstruction({
+    mode: "REGISTER",
+    register: CPURegister.ACCUMULATOR,
+  }),
+  [Opcode.ROTATE_LEFT_ZERO_PAGE]: new RotateLeftInstruction({
+    mode: "MEMORY",
+    getAddress: Addressing.zeroPage,
+  }),
+  [Opcode.ROTATE_LEFT_ZERO_PAGE_X]: new RotateLeftInstruction({
+    mode: "MEMORY",
+    getAddress: Addressing.zeroPageX,
+  }),
+  [Opcode.ROTATE_LEFT_ABSOLUTE]: new RotateLeftInstruction({
+    mode: "MEMORY",
+    getAddress: Addressing.absolute,
+  }),
+  [Opcode.ROTATE_LEFT_ABSOLUTE_X]: new RotateLeftInstruction({
+    mode: "MEMORY",
+    getAddress: Addressing.absoluteX,
+  }),
+
+  // Rotate Right
+  [Opcode.ROTATE_RIGHT_ACCUMULATOR]: new RotateRightInstruction({
+    mode: "REGISTER",
+    register: CPURegister.ACCUMULATOR,
+  }),
+  [Opcode.ROTATE_RIGHT_ZERO_PAGE]: new RotateRightInstruction({
+    mode: "MEMORY",
+    getAddress: Addressing.zeroPage,
+  }),
+  [Opcode.ROTATE_RIGHT_ZERO_PAGE_X]: new RotateRightInstruction({
+    mode: "MEMORY",
+    getAddress: Addressing.zeroPageX,
+  }),
+  [Opcode.ROTATE_RIGHT_ABSOLUTE]: new RotateRightInstruction({
+    mode: "MEMORY",
+    getAddress: Addressing.absolute,
+  }),
+  [Opcode.ROTATE_RIGHT_ABSOLUTE_X]: new RotateRightInstruction({
     mode: "MEMORY",
     getAddress: Addressing.absoluteX,
   }),
