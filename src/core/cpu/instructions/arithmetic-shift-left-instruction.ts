@@ -35,16 +35,16 @@ export class ArithmeticShiftLeftInstruction implements Instruction {
     }
 
     // MEMORY
-    const addr = this.config.getAddress(cpu);
-    const value = cpu.memory.read(addr);
+    const { address } = this.config.getAddress(cpu);
+    const value = cpu.memory.read(address);
 
     // Read-Modify-Write
-    cpu.memory.write(addr, value);
+    cpu.memory.write(address, value);
 
     const carry = (value & 0x80) !== 0;
     const result = (value << 1) & 0xff;
 
-    cpu.memory.write(addr, result);
+    cpu.memory.write(address, result);
 
     cpu.status.setFlag(Flag.CARRY, carry);
     cpu.status.updateZeroAndNegative(result);

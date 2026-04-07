@@ -10,7 +10,7 @@ export class StoreInstruction implements Instruction {
   ) {}
 
   execute(cpu: CPU) {
-    const address = this.getAddress(cpu);
+    const { address } = this.getAddress(cpu);
     cpu.memory.write(address, cpu.registers[this.register]);
   }
 }

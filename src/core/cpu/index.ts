@@ -19,7 +19,7 @@ export class CPU {
   }
 
   step() {
-    const address = Addressing.immediate(this);
+    const { address } = Addressing.immediate(this);
     const opcode = this.memory.read(address) as Opcode;
 
     const instruction = this.instructions[opcode];

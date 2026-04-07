@@ -10,8 +10,8 @@ export class LoadInstruction implements Instruction {
   ) {}
 
   execute(cpu: CPU) {
-    const addr = this.getAddress(cpu);
-    const value = cpu.memory.read(addr);
+    const { address } = this.getAddress(cpu);
+    const value = cpu.memory.read(address);
 
     cpu.registers[this.register] = value;
     cpu.status.updateZeroAndNegative(value);
