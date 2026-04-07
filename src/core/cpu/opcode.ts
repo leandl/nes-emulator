@@ -130,9 +130,21 @@ export enum Opcode {
   BRANCH_IF_EQUAL = 0xf0,
   BRANCH_IF_NOT_EQUAL = 0xd0,
 
-  // Flags
-  SET_CARRY_FLAG = 0x38,
+  // Flag
+  //// Carry
   CLEAR_CARRY_FLAG = 0x18,
+  SET_CARRY_FLAG = 0x38,
+
+  //// Interrupt
+  CLEAR_INTERRUPT_FLAG = 0x58,
+  SET_INTERRUPT_FLAG = 0x78,
+
+  //// Decimal
+  CLEAR_DECIMAL_FLAG = 0xd8,
+  SET_DECIMAL_FLAG = 0xf8,
+
+  //// Overflow
+  CLEAR_OVERFLOW_FLAG = 0xb8,
 
   // Other
   //// System
@@ -261,5 +273,21 @@ export type ShiftOpcode =
   | Opcode.ROTATE_RIGHT_ZERO_PAGE_X
   | Opcode.ROTATE_RIGHT_ABSOLUTE
   | Opcode.ROTATE_RIGHT_ABSOLUTE_X;
+
+export type FlagOpcode =
+  //// Carry
+  | Opcode.CLEAR_CARRY_FLAG
+  | Opcode.SET_CARRY_FLAG
+
+  //// Interrupt
+  | Opcode.CLEAR_INTERRUPT_FLAG
+  | Opcode.SET_INTERRUPT_FLAG
+
+  //// Decimal
+  | Opcode.CLEAR_DECIMAL_FLAG
+  | Opcode.SET_DECIMAL_FLAG
+
+  //// Overflow
+  | Opcode.CLEAR_OVERFLOW_FLAG;
 
 export type OtherOpcode = Opcode.NO_OPERATION;
