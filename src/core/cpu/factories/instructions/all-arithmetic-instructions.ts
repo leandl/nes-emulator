@@ -1,13 +1,13 @@
 import { Addressing } from "../../addressing";
 import { Opcode, ArithmeticOpcode } from "../../opcode";
 import { CPURegister } from "../../registers";
-import { AddWithCarryInstruction } from "../add-with-carry-instruction";
-import { DecrementInstruction } from "../decrement-instruction";
-import { DecrementMemoryInstruction } from "../decrement-memory-instruction";
-import { IncrementInstruction } from "../increment-instruction";
-import { IncrementMemoryInstruction } from "../increment-memory-instruction";
-import { Instruction } from "../instruction";
-import { SubtractWithCarryInstruction } from "../subtract-with-carry-instruction copy";
+import { AddWithCarryInstruction } from "../../instructions/add-with-carry-instruction";
+import { DecrementInstruction } from "../../instructions/decrement-instruction";
+import { DecrementMemoryInstruction } from "../../instructions/decrement-memory-instruction";
+import { IncrementInstruction } from "../../instructions/increment-instruction";
+import { IncrementMemoryInstruction } from "../../instructions/increment-memory-instruction";
+import { Instruction } from "../../instructions/instruction";
+import { SubtractWithCarryInstruction } from "../../instructions/subtract-with-carry-instruction";
 
 export const allArithmeticInstructions: Record<ArithmeticOpcode, Instruction> =
   {

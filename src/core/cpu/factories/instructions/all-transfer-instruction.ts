@@ -1,7 +1,7 @@
 import { Opcode, TransferOpcode } from "../../opcode";
 import { CPURegister } from "../../registers";
-import { Instruction } from "../instruction";
-import { TransferInstruction } from "../transfer-instruction";
+import { Instruction } from "../../instructions/instruction";
+import { TransferInstruction } from "../../instructions/transfer-instruction";
 
 export const allTransferInstructions: Record<TransferOpcode, Instruction> = {
   // X Register <-> Accumulator

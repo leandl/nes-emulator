@@ -1,6 +1,6 @@
 import { CPU } from "../../../../../core/cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/instructions/factories/all-instructions";
+import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
 
 describe("INC instruction integration tests", () => {
@@ -10,17 +10,12 @@ describe("INC instruction integration tests", () => {
     cpu = new CPU(allInstruction);
   });
 
-  function loadProgram(program: number[], startAddress = 0x8000) {
-    cpu.memory.load(program, startAddress);
-    cpu.registers.PC = startAddress;
-  }
-
   it("INC increments memory and updates flags (Zero Page)", () => {
     const addr = 0x10;
 
     cpu.memory.write(addr, 0x10);
 
-    loadProgram([Opcode.INCREMENT_MEMORY_ZERO_PAGE, addr]);
+    cpu.loadProgram([Opcode.INCREMENT_MEMORY_ZERO_PAGE, addr]);
 
     cpu.step();
 
@@ -34,7 +29,7 @@ describe("INC instruction integration tests", () => {
 
     cpu.memory.write(addr, 0xff);
 
-    loadProgram([Opcode.INCREMENT_MEMORY_ZERO_PAGE, addr]);
+    cpu.loadProgram([Opcode.INCREMENT_MEMORY_ZERO_PAGE, addr]);
 
     cpu.step();
 
@@ -48,7 +43,7 @@ describe("INC instruction integration tests", () => {
 
     cpu.memory.write(addr, 0x7f);
 
-    loadProgram([Opcode.INCREMENT_MEMORY_ZERO_PAGE, addr]);
+    cpu.loadProgram([Opcode.INCREMENT_MEMORY_ZERO_PAGE, addr]);
 
     cpu.step();
 
@@ -65,7 +60,7 @@ describe("INC instruction integration tests", () => {
     cpu.status.setFlag(Flag.CARRY, true);
     cpu.status.setFlag(Flag.OVERFLOW, true);
 
-    loadProgram([Opcode.INCREMENT_MEMORY_ZERO_PAGE, addr]);
+    cpu.loadProgram([Opcode.INCREMENT_MEMORY_ZERO_PAGE, addr]);
 
     cpu.step();
 
@@ -79,7 +74,7 @@ describe("INC instruction integration tests", () => {
 
     cpu.memory.write(addr, 0xff);
 
-    loadProgram([Opcode.INCREMENT_MEMORY_ZERO_PAGE, addr]);
+    cpu.loadProgram([Opcode.INCREMENT_MEMORY_ZERO_PAGE, addr]);
 
     cpu.step();
 

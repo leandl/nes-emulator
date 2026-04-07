@@ -1,4 +1,4 @@
-export class CPUMemory {
+export class Memory {
   private memory = new Uint8Array(0x10000); // 64KB
 
   read(addr: number): number {
