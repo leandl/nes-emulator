@@ -12,6 +12,7 @@ type RegisterMode = {
 type MemoryMode = {
   mode: "MEMORY";
   getAddress: AddressResolver;
+  baseCycles: number;
 };
 
 type RotateLeftInstructionConfig = RegisterMode | MemoryMode;
@@ -33,7 +34,7 @@ export class RotateLeftInstruction implements Instruction {
       cpu.status.setFlag(Flag.CARRY, carryOut);
       cpu.status.updateZeroAndNegative(result);
 
-      return;
+      return 2; // cycles
     }
 
     // MEMORY
@@ -50,5 +51,7 @@ export class RotateLeftInstruction implements Instruction {
 
     cpu.status.setFlag(Flag.CARRY, carryOut);
     cpu.status.updateZeroAndNegative(result);
+
+    return this.config.baseCycles;
   }
 }

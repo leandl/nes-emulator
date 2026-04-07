@@ -4,8 +4,9 @@ import { Flag } from "../../../../../core/cpu/flag";
 import { Opcode } from "../../../../../core/cpu/opcode";
 
 describe("SED instruction", () => {
-  it("sets decimal flag", () => {
+  it("sets decimal flag and consumes 2 cycles", () => {
     const cpu = new CPU(allInstruction);
+    const initialCycles = cpu.cycles;
 
     cpu.status.setFlag(Flag.DECIMAL, false);
 
@@ -13,5 +14,6 @@ describe("SED instruction", () => {
     cpu.step();
 
     expect(cpu.status.is(Flag.DECIMAL)).toBe(true);
+    expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

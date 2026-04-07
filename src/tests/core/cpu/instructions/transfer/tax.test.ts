@@ -10,29 +10,44 @@ describe("TAX instruction integration tests", () => {
     cpu = new CPU(allInstruction);
   });
 
-  it("TAX transfers Accumulator to X and updates flags", () => {
+  it("TAX transfers Accumulator to X, updates flags and consumes 2 cycles", () => {
     // Valor normal
     cpu.registers.A = 0x42;
     cpu.loadProgram([Opcode.TRANSFER_ACCUMULATOR_TO_X_REGISTER]);
+
+    let initialCycles = cpu.cycles;
+
     cpu.step();
+
     expect(cpu.registers.X).toBe(0x42);
     expect(cpu.status.is(Flag.ZERO)).toBe(false);
     expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.cycles - initialCycles).toBe(2);
 
     // Zero flag
     cpu.registers.A = 0x00;
     cpu.loadProgram([Opcode.TRANSFER_ACCUMULATOR_TO_X_REGISTER], 0x8001);
+
+    initialCycles = cpu.cycles;
+
     cpu.step();
+
     expect(cpu.registers.X).toBe(0x00);
     expect(cpu.status.is(Flag.ZERO)).toBe(true);
     expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.cycles - initialCycles).toBe(2);
 
     // Negative flag
     cpu.registers.A = 0x80;
     cpu.loadProgram([Opcode.TRANSFER_ACCUMULATOR_TO_X_REGISTER], 0x8002);
+
+    initialCycles = cpu.cycles;
+
     cpu.step();
+
     expect(cpu.registers.X).toBe(0x80);
     expect(cpu.status.is(Flag.ZERO)).toBe(false);
     expect(cpu.status.is(Flag.NEGATIVE)).toBe(true);
+    expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

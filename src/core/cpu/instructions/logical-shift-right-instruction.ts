@@ -29,7 +29,7 @@ export class LogicalShiftRightInstruction implements Instruction {
       cpu.registers[this.config.register] = result;
 
       cpu.status.setFlag(Flag.CARRY, carry);
-      cpu.status.setFlag(Flag.NEGATIVE, false); // 👈 sempre 0
+      cpu.status.setFlag(Flag.NEGATIVE, false); //
       cpu.status.setFlag(Flag.ZERO, result === 0);
 
       return;

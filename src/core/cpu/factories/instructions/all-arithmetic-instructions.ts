@@ -3,49 +3,75 @@ import { Opcode, ArithmeticOpcode } from "../../opcode";
 import { CPURegister } from "../../registers";
 import { AddWithCarryInstruction } from "../../instructions/add-with-carry-instruction";
 import { DecrementInstruction } from "../../instructions/decrement-instruction";
-import { DecrementMemoryInstruction } from "../../instructions/decrement-memory-instruction";
 import { IncrementInstruction } from "../../instructions/increment-instruction";
-import { IncrementMemoryInstruction } from "../../instructions/increment-memory-instruction";
 import { Instruction } from "../../instructions/instruction";
 import { SubtractWithCarryInstruction } from "../../instructions/subtract-with-carry-instruction";
 
 export const allArithmeticInstructions: Record<ArithmeticOpcode, Instruction> =
   {
     // Increment
-    [Opcode.INCREMENT_X_REGISTER]: new IncrementInstruction(CPURegister.X),
-    [Opcode.INCREMENT_Y_REGISTER]: new IncrementInstruction(CPURegister.Y),
+    [Opcode.INCREMENT_X_REGISTER]: new IncrementInstruction({
+      mode: "REGISTER",
+      register: CPURegister.X,
+    }),
+    [Opcode.INCREMENT_Y_REGISTER]: new IncrementInstruction({
+      mode: "REGISTER",
+      register: CPURegister.Y,
+    }),
 
     // Decrement
-    [Opcode.DECREMENT_X_REGISTER]: new DecrementInstruction(CPURegister.X),
-    [Opcode.DECREMENT_Y_REGISTER]: new DecrementInstruction(CPURegister.Y),
+    [Opcode.DECREMENT_X_REGISTER]: new DecrementInstruction({
+      mode: "REGISTER",
+      register: CPURegister.X,
+    }),
+    [Opcode.DECREMENT_Y_REGISTER]: new DecrementInstruction({
+      mode: "REGISTER",
+      register: CPURegister.Y,
+    }),
 
     // Increment Memory
-    [Opcode.INCREMENT_MEMORY_ZERO_PAGE]: new IncrementMemoryInstruction(
-      Addressing.zeroPage,
-    ),
-    [Opcode.INCREMENT_MEMORY_ZERO_PAGE_X]: new IncrementMemoryInstruction(
-      Addressing.zeroPageX,
-    ),
-    [Opcode.INCREMENT_MEMORY_ABSOLUTE]: new IncrementMemoryInstruction(
-      Addressing.absolute,
-    ),
-    [Opcode.INCREMENT_MEMORY_ABSOLUTE_X]: new IncrementMemoryInstruction(
-      Addressing.absoluteX,
-    ),
+    [Opcode.INCREMENT_MEMORY_ZERO_PAGE]: new IncrementInstruction({
+      mode: "MEMORY",
+      getAddress: Addressing.zeroPage,
+      baseCycles: 5,
+    }),
+    [Opcode.INCREMENT_MEMORY_ZERO_PAGE_X]: new IncrementInstruction({
+      mode: "MEMORY",
+      getAddress: Addressing.zeroPageX,
+      baseCycles: 6,
+    }),
+    [Opcode.INCREMENT_MEMORY_ABSOLUTE]: new IncrementInstruction({
+      mode: "MEMORY",
+      getAddress: Addressing.absolute,
+      baseCycles: 6,
+    }),
+    [Opcode.INCREMENT_MEMORY_ABSOLUTE_X]: new IncrementInstruction({
+      mode: "MEMORY",
+      getAddress: Addressing.absoluteX,
+      baseCycles: 7,
+    }),
 
     // Decrement Memory
-    [Opcode.DECREMENT_MEMORY_ZERO_PAGE]: new DecrementMemoryInstruction(
-      Addressing.zeroPage,
-    ),
-    [Opcode.DECREMENT_MEMORY_ZERO_PAGE_X]: new DecrementMemoryInstruction(
-      Addressing.zeroPageX,
-    ),
-    [Opcode.DECREMENT_MEMORY_ABSOLUTE]: new DecrementMemoryInstruction(
-      Addressing.absolute,
-    ),
-    [Opcode.DECREMENT_MEMORY_ABSOLUTE_X]: new DecrementMemoryInstruction(
-      Addressing.absoluteX,
-    ),
+    [Opcode.DECREMENT_MEMORY_ZERO_PAGE]: new DecrementInstruction({
+      mode: "MEMORY",
+      getAddress: Addressing.zeroPage,
+      baseCycles: 5,
+    }),
+    [Opcode.DECREMENT_MEMORY_ZERO_PAGE_X]: new DecrementInstruction({
+      mode: "MEMORY",
+      getAddress: Addressing.zeroPageX,
+      baseCycles: 6,
+    }),
+    [Opcode.DECREMENT_MEMORY_ABSOLUTE]: new DecrementInstruction({
+      mode: "MEMORY",
+      getAddress: Addressing.absolute,
+      baseCycles: 6,
+    }),
+    [Opcode.DECREMENT_MEMORY_ABSOLUTE_X]: new DecrementInstruction({
+      mode: "MEMORY",
+      getAddress: Addressing.absoluteX,
+      baseCycles: 7,
+    }),
 
     // Add with Carry
     [Opcode.ADD_WITH_CARRY_IMMEDIATE]: new AddWithCarryInstruction(

@@ -4,8 +4,9 @@ import { Flag } from "../../../../../core/cpu/flag";
 import { Opcode } from "../../../../../core/cpu/opcode";
 
 describe("CLI instruction", () => {
-  it("clears interrupt disable flag", () => {
+  it("clears interrupt disable flag and consumes 2 cycles", () => {
     const cpu = new CPU(allInstruction);
+    const initialCycles = cpu.cycles;
 
     cpu.status.setFlag(Flag.INTERRUPT_DISABLE, true);
 
@@ -13,5 +14,6 @@ describe("CLI instruction", () => {
     cpu.step();
 
     expect(cpu.status.is(Flag.INTERRUPT_DISABLE)).toBe(false);
+    expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

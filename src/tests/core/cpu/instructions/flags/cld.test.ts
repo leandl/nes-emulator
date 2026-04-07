@@ -4,8 +4,9 @@ import { Flag } from "../../../../../core/cpu/flag";
 import { Opcode } from "../../../../../core/cpu/opcode";
 
 describe("CLD instruction", () => {
-  it("clears decimal flag", () => {
+  it("clears decimal flag and consumes 2 cycles", () => {
     const cpu = new CPU(allInstruction);
+    const initialCycles = cpu.cycles;
 
     cpu.status.setFlag(Flag.DECIMAL, true);
 
@@ -13,5 +14,6 @@ describe("CLD instruction", () => {
     cpu.step();
 
     expect(cpu.status.is(Flag.DECIMAL)).toBe(false);
+    expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

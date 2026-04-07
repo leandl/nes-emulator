@@ -64,18 +64,22 @@ export const allShiftInstructions: Record<ShiftOpcode, Instruction> = {
   [Opcode.ROTATE_LEFT_ZERO_PAGE]: new RotateLeftInstruction({
     mode: "MEMORY",
     getAddress: Addressing.zeroPage,
+    baseCycles: 5,
   }),
   [Opcode.ROTATE_LEFT_ZERO_PAGE_X]: new RotateLeftInstruction({
     mode: "MEMORY",
     getAddress: Addressing.zeroPageX,
+    baseCycles: 6,
   }),
   [Opcode.ROTATE_LEFT_ABSOLUTE]: new RotateLeftInstruction({
     mode: "MEMORY",
     getAddress: Addressing.absolute,
+    baseCycles: 6,
   }),
   [Opcode.ROTATE_LEFT_ABSOLUTE_X]: new RotateLeftInstruction({
     mode: "MEMORY",
     getAddress: Addressing.absoluteX,
+    baseCycles: 7,
   }),
 
   // Rotate Right
@@ -86,17 +90,21 @@ export const allShiftInstructions: Record<ShiftOpcode, Instruction> = {
   [Opcode.ROTATE_RIGHT_ZERO_PAGE]: new RotateRightInstruction({
     mode: "MEMORY",
     getAddress: Addressing.zeroPage,
+    baseCycles: 5,
   }),
   [Opcode.ROTATE_RIGHT_ZERO_PAGE_X]: new RotateRightInstruction({
     mode: "MEMORY",
     getAddress: Addressing.zeroPageX,
+    baseCycles: 6,
   }),
   [Opcode.ROTATE_RIGHT_ABSOLUTE]: new RotateRightInstruction({
     mode: "MEMORY",
     getAddress: Addressing.absolute,
+    baseCycles: 6,
   }),
   [Opcode.ROTATE_RIGHT_ABSOLUTE_X]: new RotateRightInstruction({
     mode: "MEMORY",
     getAddress: Addressing.absoluteX,
+    baseCycles: 7,
   }),
 };
