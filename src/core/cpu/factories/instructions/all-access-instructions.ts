@@ -1,9 +1,9 @@
 import { Addressing } from "../../addressing";
 import { AccessOpcode, Opcode } from "../../opcode";
 import { CPURegister } from "../../registers";
-import { Instruction } from "../instruction";
-import { LoadInstruction } from "../load-instruction";
-import { StoreInstruction } from "../store-instruction";
+import { Instruction } from "../../instructions/instruction";
+import { LoadInstruction } from "../../instructions/load-instruction";
+import { StoreInstruction } from "../../instructions/store-instruction";
 
 export const allAccessInstructions: Record<AccessOpcode, Instruction> = {
   // Load Accumulator

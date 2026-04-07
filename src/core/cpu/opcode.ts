@@ -24,7 +24,7 @@ export enum Opcode {
   LOAD_Y_REGISTER_ABSOLUTE = 0xac,
   LOAD_Y_REGISTER_ABSOLUTE_X = 0xbc,
 
-  // Store Accumulator
+  //// Store Accumulator
   STORE_ACCUMULATOR_ZERO_PAGE = 0x85,
   STORE_ACCUMULATOR_ZERO_PAGE_X = 0x95,
   STORE_ACCUMULATOR_ABSOLUTE = 0x8d,
@@ -33,47 +33,47 @@ export enum Opcode {
   STORE_ACCUMULATOR_INDIRECT_X = 0x81,
   STORE_ACCUMULATOR_INDIRECT_Y = 0x91,
 
-  // Store X Register
+  //// Store X Register
   STORE_X_REGISTER_ZERO_PAGE = 0x84,
   STORE_X_REGISTER_ZERO_PAGE_Y = 0x94,
   STORE_X_REGISTER_ABSOLUTE = 0x8c,
 
-  // Store Y Register
+  //// Store Y Register
   STORE_Y_REGISTER_ZERO_PAGE = 0x86,
   STORE_Y_REGISTER_ZERO_PAGE_X = 0x96,
   STORE_Y_REGISTER_ABSOLUTE = 0x8e,
 
-  //// Transfer
-  // X Register <-> Accumulator
+  // Transfer
+  //// X Register <-> Accumulator
   TRANSFER_ACCUMULATOR_TO_X_REGISTER = 0xaa,
   TRANSFER_X_REGISTER_TO_ACCUMULATOR = 0x8a,
 
-  // Y Register <-> Accumulator
+  //// Y Register <-> Accumulator
   TRANSFER_ACCUMULATOR_TO_Y_REGISTER = 0xa8,
   TRANSFER_Y_REGISTER_TO_ACCUMULATOR = 0x98,
 
-  //// Arithmetic
-  // Increment
+  // Arithmetic
+  //// Increment
   INCREMENT_X_REGISTER = 0xe8,
   INCREMENT_Y_REGISTER = 0xc8,
 
-  // Decrement
+  //// Decrement
   DECREMENT_X_REGISTER = 0xca,
   DECREMENT_Y_REGISTER = 0x88,
 
-  // Increment Memory
+  //// Increment Memory
   INCREMENT_MEMORY_ZERO_PAGE = 0xe6,
   INCREMENT_MEMORY_ZERO_PAGE_X = 0xf6,
   INCREMENT_MEMORY_ABSOLUTE = 0xee,
   INCREMENT_MEMORY_ABSOLUTE_X = 0xfe,
 
-  // Decrement Memory
+  //// Decrement Memory
   DECREMENT_MEMORY_ZERO_PAGE = 0xc6,
   DECREMENT_MEMORY_ZERO_PAGE_X = 0xd6,
   DECREMENT_MEMORY_ABSOLUTE = 0xce,
   DECREMENT_MEMORY_ABSOLUTE_X = 0xde,
 
-  // Add with Carry
+  //// Add with Carry
   ADD_WITH_CARRY_IMMEDIATE = 0x69,
   ADD_WITH_CARRY_ZERO_PAGE = 0x65,
   ADD_WITH_CARRY_ZERO_PAGE_X = 0x75,
@@ -83,7 +83,7 @@ export enum Opcode {
   ADD_WITH_CARRY_INDIRECT_X = 0x61,
   ADD_WITH_CARRY_INDIRECT_Y = 0x71,
 
-  // Subtract with Carry
+  //// Subtract with Carry
   SUBTRACT_WITH_CARRY_IMMEDIATE = 0xe9,
   SUBTRACT_WITH_CARRY_ZERO_PAGE = 0xe5,
   SUBTRACT_WITH_CARRY_ZERO_PAGE_X = 0xf5,

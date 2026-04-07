@@ -1,5 +1,5 @@
 import { CPU } from "../../../../../core/cpu";
-import { allInstruction } from "../../../../../core/cpu/instructions/factories/all-instructions";
+import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
 
 describe("NOP instruction integration tests", () => {
@@ -9,14 +9,9 @@ describe("NOP instruction integration tests", () => {
     cpu = new CPU(allInstruction);
   });
 
-  function loadProgram(program: number[], startAddress = 0x8000) {
-    cpu.memory.load(program, startAddress);
-    cpu.registers.PC = startAddress;
-  }
-
   it("NOP does nothing except increment PC", () => {
     const initialPC = 0x8000;
-    loadProgram([Opcode.NO_OPERATION], initialPC);
+    cpu.loadProgram([Opcode.NO_OPERATION], initialPC);
 
     // Salva estado inicial dos registradores e flags
     const initialA = cpu.registers.A;

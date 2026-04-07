@@ -1,6 +1,6 @@
 import { CPU } from "../../../../../core/cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/instructions/factories/all-instructions";
+import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
 
 describe("SBC instruction integration tests", () => {
@@ -10,16 +10,11 @@ describe("SBC instruction integration tests", () => {
     cpu = new CPU(allInstruction);
   });
 
-  function loadProgram(program: number[], startAddress = 0x8000) {
-    cpu.memory.load(program, startAddress);
-    cpu.registers.PC = startAddress;
-  }
-
   it("SBC subtracts memory from accumulator (no borrow)", () => {
     cpu.registers.A = 0x10;
     cpu.status.setFlag(Flag.CARRY, true); // sem borrow
 
-    loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]);
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]);
 
     cpu.step();
 
@@ -33,7 +28,7 @@ describe("SBC instruction integration tests", () => {
     cpu.registers.A = 0x10;
     cpu.status.setFlag(Flag.CARRY, false); // com borrow
 
-    loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]);
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]);
 
     cpu.step();
 
@@ -44,7 +39,7 @@ describe("SBC instruction integration tests", () => {
     cpu.registers.A = 0x00;
     cpu.status.setFlag(Flag.CARRY, true);
 
-    loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x01]);
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x01]);
 
     cpu.step();
 
@@ -57,7 +52,7 @@ describe("SBC instruction integration tests", () => {
     cpu.registers.A = 0x05;
     cpu.status.setFlag(Flag.CARRY, true);
 
-    loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]);
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]);
 
     cpu.step();
 
@@ -70,7 +65,7 @@ describe("SBC instruction integration tests", () => {
     cpu.registers.A = 0x01;
     cpu.status.setFlag(Flag.CARRY, true);
 
-    loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x02]);
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x02]);
 
     cpu.step();
 
@@ -82,7 +77,7 @@ describe("SBC instruction integration tests", () => {
     cpu.registers.A = 0x50; // positivo
     cpu.status.setFlag(Flag.CARRY, true);
 
-    loadProgram([
+    cpu.loadProgram([
       Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE,
       0xb0, // negativo
     ]);
@@ -97,7 +92,7 @@ describe("SBC instruction integration tests", () => {
     cpu.registers.A = 0x90; // negativo
     cpu.status.setFlag(Flag.CARRY, true);
 
-    loadProgram([
+    cpu.loadProgram([
       Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE,
       0x10, // positivo
     ]);
@@ -112,7 +107,7 @@ describe("SBC instruction integration tests", () => {
     cpu.registers.A = 0x50;
     cpu.status.setFlag(Flag.CARRY, true);
 
-    loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x10]);
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x10]);
 
     cpu.step();
 
@@ -123,7 +118,7 @@ describe("SBC instruction integration tests", () => {
     cpu.registers.A = 0x20;
     cpu.status.setFlag(Flag.CARRY, true);
 
-    loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x10]);
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x10]);
 
     cpu.step();
 
@@ -135,7 +130,7 @@ describe("SBC instruction integration tests", () => {
     cpu.registers.A = 0x10;
     cpu.status.setFlag(Flag.CARRY, true);
 
-    loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x20]);
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x20]);
 
     cpu.step();
 
@@ -147,7 +142,7 @@ describe("SBC instruction integration tests", () => {
     cpu.registers.A = 0x01;
     cpu.status.setFlag(Flag.CARRY, true);
 
-    loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x01]);
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x01]);
 
     cpu.step();
 
@@ -160,7 +155,7 @@ describe("SBC instruction integration tests", () => {
     cpu.registers.A = 0x00;
     cpu.status.setFlag(Flag.CARRY, true);
 
-    loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x02]);
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x02]);
 
     cpu.step();
 
@@ -173,7 +168,7 @@ describe("SBC instruction integration tests", () => {
     cpu.registers.A = 0x90; // negativo
     cpu.status.setFlag(Flag.CARRY, true);
 
-    loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0xf0]); // negativo
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0xf0]); // negativo
 
     cpu.step();
 
@@ -185,7 +180,7 @@ describe("SBC instruction integration tests", () => {
     cpu.registers.A = 0x80; // negativo
     cpu.status.setFlag(Flag.CARRY, false); // força borrow
 
-    loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x01]);
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x01]);
 
     cpu.step();
 

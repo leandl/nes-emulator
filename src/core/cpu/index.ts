@@ -1,5 +1,5 @@
 import { Addressing } from "./addressing";
-import { CPUMemory } from "./cpu-memory";
+import { Memory } from "./memory";
 import { CPUStatus } from "./cpu-status";
 import type { Instruction } from "./instructions/instruction";
 
@@ -9,9 +9,14 @@ import { Registers } from "./registers";
 export class CPU {
   registers = new Registers();
   status = new CPUStatus();
-  memory = new CPUMemory();
+  memory = new Memory();
 
   constructor(private instructions: Record<Opcode, Instruction>) {}
+
+  loadProgram(program: number[], startAddress = 0x8000) {
+    this.memory.load(program, startAddress);
+    this.registers.PC = startAddress;
+  }
 
   step() {
     const address = Addressing.immediate(this);
