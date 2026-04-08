@@ -12,6 +12,7 @@ type RegisterMode = {
 type MemoryMode = {
   mode: "MEMORY";
   getAddress: AddressResolver;
+  baseCycles: number;
 };
 
 type ArithmeticShiftLeftInstructionConfig = RegisterMode | MemoryMode;
@@ -31,7 +32,7 @@ export class ArithmeticShiftLeftInstruction implements Instruction {
       cpu.status.setFlag(Flag.CARRY, carry);
       cpu.status.updateZeroAndNegative(result);
 
-      return;
+      return 2; // cycles
     }
 
     // MEMORY
@@ -48,5 +49,7 @@ export class ArithmeticShiftLeftInstruction implements Instruction {
 
     cpu.status.setFlag(Flag.CARRY, carry);
     cpu.status.updateZeroAndNegative(result);
+
+    return this.config.baseCycles;
   }
 }

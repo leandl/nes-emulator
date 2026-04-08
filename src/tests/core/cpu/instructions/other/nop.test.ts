@@ -32,7 +32,6 @@ describe("NOP instruction integration tests", () => {
     expect(cpu.registers.Y).toBe(initialY);
     expect(cpu.status.raw).toBe(initialStatus);
 
-    // ✅ ciclos
     expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

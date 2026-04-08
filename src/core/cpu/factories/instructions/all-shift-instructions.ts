@@ -17,20 +17,24 @@ export const allShiftInstructions: Record<ShiftOpcode, Instruction> = {
   [Opcode.ARITHMETIC_SHIFT_LEFT_ZERO_PAGE]: new ArithmeticShiftLeftInstruction({
     mode: "MEMORY",
     getAddress: Addressing.zeroPage,
+    baseCycles: 5,
   }),
   [Opcode.ARITHMETIC_SHIFT_LEFT_ZERO_PAGE_X]:
     new ArithmeticShiftLeftInstruction({
       mode: "MEMORY",
       getAddress: Addressing.zeroPageX,
+      baseCycles: 6,
     }),
   [Opcode.ARITHMETIC_SHIFT_LEFT_ABSOLUTE]: new ArithmeticShiftLeftInstruction({
     mode: "MEMORY",
     getAddress: Addressing.absolute,
+    baseCycles: 6,
   }),
   [Opcode.ARITHMETIC_SHIFT_LEFT_ABSOLUTE_X]: new ArithmeticShiftLeftInstruction(
     {
       mode: "MEMORY",
       getAddress: Addressing.absoluteX,
+      baseCycles: 7,
     },
   ),
 
@@ -42,18 +46,22 @@ export const allShiftInstructions: Record<ShiftOpcode, Instruction> = {
   [Opcode.LOGICAL_SHIFT_RIGHT_ZERO_PAGE]: new LogicalShiftRightInstruction({
     mode: "MEMORY",
     getAddress: Addressing.zeroPage,
+    baseCycles: 5,
   }),
   [Opcode.LOGICAL_SHIFT_RIGHT_ZERO_PAGE_X]: new LogicalShiftRightInstruction({
     mode: "MEMORY",
     getAddress: Addressing.zeroPageX,
+    baseCycles: 6,
   }),
   [Opcode.LOGICAL_SHIFT_RIGHT_ABSOLUTE]: new LogicalShiftRightInstruction({
     mode: "MEMORY",
     getAddress: Addressing.absolute,
+    baseCycles: 6,
   }),
   [Opcode.LOGICAL_SHIFT_RIGHT_ABSOLUTE_X]: new LogicalShiftRightInstruction({
     mode: "MEMORY",
     getAddress: Addressing.absoluteX,
+    baseCycles: 7,
   }),
 
   // Rotate Left

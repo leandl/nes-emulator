@@ -10,6 +10,154 @@ describe("SBC instruction integration tests", () => {
     cpu = new CPU(allInstruction);
   });
 
+  it("SBC immediate (2 cycles)", () => {
+    cpu.registers.A = 0x10;
+    cpu.status.setFlag(Flag.CARRY, true);
+
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]);
+
+    const initialCycles = cpu.cycles;
+    cpu.step();
+
+    expect(cpu.cycles - initialCycles).toBe(2);
+
+    expect(cpu.registers.A).toBe(0x0b);
+    expect(cpu.status.is(Flag.CARRY)).toBe(true);
+  });
+
+  it("SBC zero page (3 cycles)", () => {
+    cpu.memory.write(0x10, 0x05);
+    cpu.registers.A = 0x10;
+    cpu.status.setFlag(Flag.CARRY, true);
+
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_ZERO_PAGE, 0x10]);
+
+    const initialCycles = cpu.cycles;
+    cpu.step();
+
+    expect(cpu.cycles - initialCycles).toBe(3);
+    expect(cpu.registers.A).toBe(0x0b);
+  });
+
+  it("SBC zero page,X (4 cycles)", () => {
+    cpu.registers.X = 0x01;
+    cpu.memory.write(0x11, 0x05);
+    cpu.registers.A = 0x10;
+    cpu.status.setFlag(Flag.CARRY, true);
+
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_ZERO_PAGE_X, 0x10]);
+
+    const initialCycles = cpu.cycles;
+    cpu.step();
+
+    expect(cpu.cycles - initialCycles).toBe(4);
+    expect(cpu.registers.A).toBe(0x0b);
+  });
+
+  it("SBC absolute (4 cycles)", () => {
+    cpu.memory.write(0x1234, 0x05);
+    cpu.registers.A = 0x10;
+    cpu.status.setFlag(Flag.CARRY, true);
+
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_ABSOLUTE, 0x34, 0x12]);
+
+    const initialCycles = cpu.cycles;
+    cpu.step();
+
+    expect(cpu.cycles - initialCycles).toBe(4);
+    expect(cpu.registers.A).toBe(0x0b);
+  });
+
+  it("SBC absolute,X without page cross (4 cycles)", () => {
+    cpu.registers.X = 0x01;
+    cpu.memory.write(0x2001, 0x05);
+    cpu.registers.A = 0x10;
+    cpu.status.setFlag(Flag.CARRY, true);
+
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_ABSOLUTE_X, 0x00, 0x20]);
+
+    const initialCycles = cpu.cycles;
+    cpu.step();
+
+    expect(cpu.cycles - initialCycles).toBe(4);
+    expect(cpu.registers.A).toBe(0x0b);
+  });
+
+  it("SBC absolute,X with page cross (5 cycles)", () => {
+    cpu.registers.X = 0x01;
+    cpu.memory.write(0x2100, 0x05);
+    cpu.registers.A = 0x10;
+    cpu.status.setFlag(Flag.CARRY, true);
+
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_ABSOLUTE_X, 0xff, 0x20]);
+
+    const initialCycles = cpu.cycles;
+    cpu.step();
+
+    expect(cpu.cycles - initialCycles).toBe(5);
+    expect(cpu.registers.A).toBe(0x0b);
+  });
+
+  it("SBC (indirect,X) (6 cycles)", () => {
+    cpu.registers.X = 0x04;
+
+    cpu.memory.write(0x14, 0x00);
+    cpu.memory.write(0x15, 0x30);
+
+    cpu.memory.write(0x3000, 0x05);
+
+    cpu.registers.A = 0x10;
+    cpu.status.setFlag(Flag.CARRY, true);
+
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_INDIRECT_X, 0x10]);
+
+    const initialCycles = cpu.cycles;
+    cpu.step();
+
+    expect(cpu.cycles - initialCycles).toBe(6);
+    expect(cpu.registers.A).toBe(0x0b);
+  });
+
+  it("SBC (indirect),Y without page cross (5 cycles)", () => {
+    cpu.registers.Y = 0x01;
+
+    cpu.memory.write(0x10, 0x00);
+    cpu.memory.write(0x11, 0x20);
+
+    cpu.memory.write(0x2001, 0x05);
+
+    cpu.registers.A = 0x10;
+    cpu.status.setFlag(Flag.CARRY, true);
+
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_INDIRECT_Y, 0x10]);
+
+    const initialCycles = cpu.cycles;
+    cpu.step();
+
+    expect(cpu.cycles - initialCycles).toBe(5);
+    expect(cpu.registers.A).toBe(0x0b);
+  });
+
+  it("SBC (indirect),Y with page cross (6 cycles)", () => {
+    cpu.registers.Y = 0x01;
+
+    cpu.memory.write(0x10, 0xff);
+    cpu.memory.write(0x11, 0x20);
+
+    cpu.memory.write(0x2100, 0x05);
+
+    cpu.registers.A = 0x10;
+    cpu.status.setFlag(Flag.CARRY, true);
+
+    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_INDIRECT_Y, 0x10]);
+
+    const initialCycles = cpu.cycles;
+    cpu.step();
+
+    expect(cpu.cycles - initialCycles).toBe(6);
+    expect(cpu.registers.A).toBe(0x0b);
+  });
+
   it("SBC subtracts memory from accumulator (no borrow)", () => {
     cpu.registers.A = 0x10;
     cpu.status.setFlag(Flag.CARRY, true); // sem borrow

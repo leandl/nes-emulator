@@ -12,6 +12,7 @@ type RegisterMode = {
 type MemoryMode = {
   mode: "MEMORY";
   getAddress: AddressResolver;
+  baseCycles: number;
 };
 
 type LogicalShiftRightInstructionConfig = RegisterMode | MemoryMode;
@@ -32,7 +33,7 @@ export class LogicalShiftRightInstruction implements Instruction {
       cpu.status.setFlag(Flag.NEGATIVE, false); //
       cpu.status.setFlag(Flag.ZERO, result === 0);
 
-      return;
+      return 2; // cycles
     }
 
     // MEMORY
@@ -50,5 +51,7 @@ export class LogicalShiftRightInstruction implements Instruction {
     cpu.status.setFlag(Flag.CARRY, carry);
     cpu.status.setFlag(Flag.NEGATIVE, false);
     cpu.status.setFlag(Flag.ZERO, result === 0);
+
+    return this.config.baseCycles;
   }
 }
