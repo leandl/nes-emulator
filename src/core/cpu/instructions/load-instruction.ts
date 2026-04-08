@@ -3,17 +3,28 @@ import type { AddressResolver } from "../addressing";
 import type { CPURegister } from "../registers";
 import type { Instruction } from "./instruction";
 
+type LoadInstructionConfig = {
+  register: CPURegister;
+  getAddress: AddressResolver;
+  baseCycles: number;
+  extraCycleOnPageCross?: boolean;
+};
+
 export class LoadInstruction implements Instruction {
-  constructor(
-    private register: CPURegister,
-    private getAddress: AddressResolver,
-  ) {}
+  constructor(private config: LoadInstructionConfig) {}
 
   execute(cpu: CPU) {
-    const addr = this.getAddress(cpu);
-    const value = cpu.memory.read(addr);
+    const { address, pageCrossed } = this.config.getAddress(cpu);
+    const value = cpu.memory.read(address);
 
-    cpu.registers[this.register] = value;
+    cpu.registers[this.config.register] = value;
     cpu.status.updateZeroAndNegative(value);
+
+    let cycles = this.config.baseCycles;
+    if (this.config.extraCycleOnPageCross && pageCrossed) {
+      cycles += 1;
+    }
+
+    return cycles;
   }
 }

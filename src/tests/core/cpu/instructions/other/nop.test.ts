@@ -9,11 +9,13 @@ describe("NOP instruction integration tests", () => {
     cpu = new CPU(allInstruction);
   });
 
-  it("NOP does nothing except increment PC", () => {
+  it("NOP does nothing except increment PC and consume 2 cycles", () => {
     const initialPC = 0x8000;
     cpu.loadProgram([Opcode.NO_OPERATION], initialPC);
 
-    // Salva estado inicial dos registradores e flags
+    const initialCycles = cpu.cycles;
+
+    // Salva estado inicial
     const initialA = cpu.registers.A;
     const initialX = cpu.registers.X;
     const initialY = cpu.registers.Y;
@@ -29,5 +31,7 @@ describe("NOP instruction integration tests", () => {
     expect(cpu.registers.X).toBe(initialX);
     expect(cpu.registers.Y).toBe(initialY);
     expect(cpu.status.raw).toBe(initialStatus);
+
+    expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

@@ -24,8 +24,14 @@ export const allInstruction: Record<Opcode, Instruction> = {
   ...allShiftInstructions,
 
   // Jump
-  [Opcode.JUMP_ABSOLUTE]: new JumpInstruction(Addressing.absolute),
-  [Opcode.JUMP_INDIRECT]: new JumpInstruction(Addressing.indirect),
+  [Opcode.JUMP_ABSOLUTE]: new JumpInstruction({
+    getAddress: Addressing.absolute,
+    baseCycles: 3,
+  }),
+  [Opcode.JUMP_INDIRECT]: new JumpInstruction({
+    getAddress: Addressing.indirect,
+    baseCycles: 5,
+  }),
 
   // Branch
   [Opcode.BRANCH_IF_EQUAL]: new NotImplementedInstruction(),

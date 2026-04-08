@@ -5,23 +5,38 @@ import { Flag } from "../../flag";
 
 export const allFlagInstructions: Record<FlagOpcode, Instruction> = {
   //// Carry
-  [Opcode.CLEAR_CARRY_FLAG]: new ModifyFlagInstruction(Flag.CARRY, false),
-  [Opcode.SET_CARRY_FLAG]: new ModifyFlagInstruction(Flag.CARRY, true),
+  [Opcode.CLEAR_CARRY_FLAG]: new ModifyFlagInstruction({
+    flag: Flag.CARRY,
+    value: false,
+  }),
+  [Opcode.SET_CARRY_FLAG]: new ModifyFlagInstruction({
+    flag: Flag.CARRY,
+    value: true,
+  }),
 
   //// Interrupt
-  [Opcode.CLEAR_INTERRUPT_FLAG]: new ModifyFlagInstruction(
-    Flag.INTERRUPT_DISABLE,
-    false,
-  ),
-  [Opcode.SET_INTERRUPT_FLAG]: new ModifyFlagInstruction(
-    Flag.INTERRUPT_DISABLE,
-    true,
-  ),
+  [Opcode.CLEAR_INTERRUPT_FLAG]: new ModifyFlagInstruction({
+    flag: Flag.INTERRUPT_DISABLE,
+    value: false,
+  }),
+  [Opcode.SET_INTERRUPT_FLAG]: new ModifyFlagInstruction({
+    flag: Flag.INTERRUPT_DISABLE,
+    value: true,
+  }),
 
   //// Decimal
-  [Opcode.CLEAR_DECIMAL_FLAG]: new ModifyFlagInstruction(Flag.DECIMAL, false),
-  [Opcode.SET_DECIMAL_FLAG]: new ModifyFlagInstruction(Flag.DECIMAL, true),
+  [Opcode.CLEAR_DECIMAL_FLAG]: new ModifyFlagInstruction({
+    flag: Flag.DECIMAL,
+    value: false,
+  }),
+  [Opcode.SET_DECIMAL_FLAG]: new ModifyFlagInstruction({
+    flag: Flag.DECIMAL,
+    value: true,
+  }),
 
   //// Overflow
-  [Opcode.CLEAR_OVERFLOW_FLAG]: new ModifyFlagInstruction(Flag.OVERFLOW, false),
+  [Opcode.CLEAR_OVERFLOW_FLAG]: new ModifyFlagInstruction({
+    flag: Flag.OVERFLOW,
+    value: false,
+  }),
 };

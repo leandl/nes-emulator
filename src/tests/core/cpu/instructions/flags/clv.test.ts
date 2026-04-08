@@ -4,8 +4,9 @@ import { Flag } from "../../../../../core/cpu/flag";
 import { Opcode } from "../../../../../core/cpu/opcode";
 
 describe("CLV instruction", () => {
-  it("clears overflow flag", () => {
+  it("clears overflow flag and consumes 2 cycles", () => {
     const cpu = new CPU(allInstruction);
+    const initialCycles = cpu.cycles;
 
     cpu.status.setFlag(Flag.OVERFLOW, true);
 
@@ -13,5 +14,6 @@ describe("CLV instruction", () => {
     cpu.step();
 
     expect(cpu.status.is(Flag.OVERFLOW)).toBe(false);
+    expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

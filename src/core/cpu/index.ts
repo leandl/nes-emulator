@@ -11,6 +11,8 @@ export class CPU {
   status = new CPUStatus();
   memory = new Memory();
 
+  cycles = 0;
+
   constructor(private instructions: Record<Opcode, Instruction>) {}
 
   loadProgram(program: number[], startAddress = 0x8000) {
@@ -19,7 +21,7 @@ export class CPU {
   }
 
   step() {
-    const address = Addressing.immediate(this);
+    const { address } = Addressing.immediate(this);
     const opcode = this.memory.read(address) as Opcode;
 
     const instruction = this.instructions[opcode];
@@ -29,6 +31,9 @@ export class CPU {
       );
     }
 
-    instruction.execute(this);
+    const cycles = instruction.execute(this);
+    if (cycles) {
+      this.cycles += cycles;
+    }
   }
 }

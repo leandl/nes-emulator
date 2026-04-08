@@ -3,12 +3,18 @@ import { AddressResolver } from "../addressing";
 import { Flag } from "../flag";
 import type { Instruction } from "./instruction";
 
+type SubtractWithCarryInstructionConfig = {
+  getAddress: AddressResolver;
+  baseCycles: number;
+  extraCycleOnPageCross?: boolean;
+};
+
 export class SubtractWithCarryInstruction implements Instruction {
-  constructor(private getAddress: AddressResolver) {}
+  constructor(private config: SubtractWithCarryInstructionConfig) {}
 
   execute(cpu: CPU) {
-    const addr = this.getAddress(cpu);
-    const value = cpu.memory.read(addr);
+    const { address, pageCrossed } = this.config.getAddress(cpu);
+    const value = cpu.memory.read(address);
 
     const A = cpu.registers.A;
     const carryIn = cpu.status.is(Flag.CARRY) ? 1 : 0;
@@ -26,5 +32,12 @@ export class SubtractWithCarryInstruction implements Instruction {
     cpu.status.setFlag(Flag.CARRY, sum > 0xff);
     cpu.status.setFlag(Flag.OVERFLOW, isOverflow);
     cpu.status.updateZeroAndNegative(result);
+
+    let cycles = this.config.baseCycles;
+    if (this.config.extraCycleOnPageCross && pageCrossed) {
+      cycles += 1;
+    }
+
+    return cycles;
   }
 }

@@ -4,8 +4,9 @@ import { Flag } from "../../../../../core/cpu/flag";
 import { Opcode } from "../../../../../core/cpu/opcode";
 
 describe("SEI instruction", () => {
-  it("sets interrupt disable flag", () => {
+  it("sets interrupt disable flag and consumes 2 cycles", () => {
     const cpu = new CPU(allInstruction);
+    const initialCycles = cpu.cycles;
 
     cpu.status.setFlag(Flag.INTERRUPT_DISABLE, false);
 
@@ -13,5 +14,6 @@ describe("SEI instruction", () => {
     cpu.step();
 
     expect(cpu.status.is(Flag.INTERRUPT_DISABLE)).toBe(true);
+    expect(cpu.cycles - initialCycles).toBe(2);
   });
 });
