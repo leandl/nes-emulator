@@ -17,7 +17,7 @@ export class SubtractWithCarryInstruction implements Instruction {
     const value = cpu.memory.read(address);
 
     const A = cpu.registers.A;
-    const carryIn = cpu.status.is(Flag.CARRY) ? 1 : 0;
+    const carryIn = cpu.registers.STATUS.is(Flag.CARRY) ? 1 : 0;
 
     // Inverte o valor (complemento de 1)
     const inverted = value ^ 0xff;
@@ -29,9 +29,9 @@ export class SubtractWithCarryInstruction implements Instruction {
 
     cpu.registers.A = result;
     // Flags
-    cpu.status.setFlag(Flag.CARRY, sum > 0xff);
-    cpu.status.setFlag(Flag.OVERFLOW, isOverflow);
-    cpu.status.updateZeroAndNegative(result);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, sum > 0xff);
+    cpu.registers.STATUS.setFlag(Flag.OVERFLOW, isOverflow);
+    cpu.registers.STATUS.updateZeroAndNegative(result);
 
     let cycles = this.config.baseCycles;
     if (this.config.extraCycleOnPageCross && pageCrossed) {

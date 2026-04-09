@@ -8,12 +8,12 @@ describe("SED instruction", () => {
     const cpu = new CPU(allInstruction);
     const initialCycles = cpu.cycles;
 
-    cpu.status.setFlag(Flag.DECIMAL, false);
+    cpu.registers.STATUS.setFlag(Flag.DECIMAL, false);
 
     cpu.loadProgram([Opcode.SET_DECIMAL_FLAG]);
     cpu.step();
 
-    expect(cpu.status.is(Flag.DECIMAL)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.DECIMAL)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

@@ -19,7 +19,7 @@ describe("NOP instruction integration tests", () => {
     const initialA = cpu.registers.A;
     const initialX = cpu.registers.X;
     const initialY = cpu.registers.Y;
-    const initialStatus = cpu.status.raw;
+    const initialStatus = cpu.registers.STATUS.raw;
 
     cpu.step();
 
@@ -30,7 +30,7 @@ describe("NOP instruction integration tests", () => {
     expect(cpu.registers.A).toBe(initialA);
     expect(cpu.registers.X).toBe(initialX);
     expect(cpu.registers.Y).toBe(initialY);
-    expect(cpu.status.raw).toBe(initialStatus);
+    expect(cpu.registers.STATUS.raw).toBe(initialStatus);
 
     expect(cpu.cycles - initialCycles).toBe(2);
   });

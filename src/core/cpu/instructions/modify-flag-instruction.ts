@@ -11,7 +11,7 @@ export class ModifyFlagInstruction implements Instruction {
   constructor(private config: ModifyFlagInstructionConfig) {}
 
   execute(cpu: CPU) {
-    cpu.status.setFlag(this.config.flag, this.config.value);
+    cpu.registers.STATUS.setFlag(this.config.flag, this.config.value);
 
     return 2; // cycles
   }

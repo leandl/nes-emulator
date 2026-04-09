@@ -7,7 +7,7 @@ describe("CLC instruction", () => {
   it("clears carry flag and consumes 2 cycles", () => {
     const cpu = new CPU(allInstruction);
 
-    cpu.status.setFlag(Flag.CARRY, true);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, true);
 
     cpu.loadProgram([Opcode.CLEAR_CARRY_FLAG]);
 
@@ -15,7 +15,7 @@ describe("CLC instruction", () => {
 
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

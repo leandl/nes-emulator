@@ -22,9 +22,9 @@ export class CompareInstruction implements Instruction {
 
     const result = (register - valueMemory) & 0xff;
 
-    cpu.status.setFlag(Flag.CARRY, register >= valueMemory);
-    cpu.status.setFlag(Flag.ZERO, register === valueMemory);
-    cpu.status.setFlag(Flag.NEGATIVE, (result & Flag.NEGATIVE) !== 0);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, register >= valueMemory);
+    cpu.registers.STATUS.setFlag(Flag.ZERO, register === valueMemory);
+    cpu.registers.STATUS.setFlag(Flag.NEGATIVE, (result & Flag.NEGATIVE) !== 0);
 
     let cycles = this.config.baseCycles;
     if (this.config.extraCycleOnPageCross && pageCrossed) {

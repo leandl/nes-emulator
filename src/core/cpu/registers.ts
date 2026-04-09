@@ -1,5 +1,8 @@
 // SP inicial do NES após reset.
 // A stack (0x0100–0x01FF) cresce para baixo e já começa parcialmente usada,
+
+import { CPUStatus } from "./cpu-status";
+
 // por isso não inicia em 0xFF.
 const INITIAL_STACK_POINTER = 0xfd;
 
@@ -16,6 +19,7 @@ export class Registers {
   private _pc = 0;
 
   private _sp = INITIAL_STACK_POINTER;
+  private _status = new CPUStatus();
 
   // --- 8-bit registers ---
 
@@ -41,6 +45,12 @@ export class Registers {
 
   set Y(value: number) {
     this._y = value & 0xff;
+  }
+
+  // --- status register ---
+
+  get STATUS() {
+    return this._status;
   }
 
   // --- 16-bit register ---
@@ -104,6 +114,7 @@ export class Registers {
       Y: this._y.toString(16).padStart(2, "0"),
       PC: this._pc.toString(16).padStart(4, "0"),
       SP: this._sp.toString(16).padStart(2, "0"),
+      STATUS: this._status.raw.toString(2).padStart(8, "0"),
     };
   }
 }

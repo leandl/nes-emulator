@@ -18,8 +18,8 @@ describe("EOR instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.registers.A).toBe(0b01011010);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(2);
 
     cpu.registers.A = 0b11111111;
@@ -28,8 +28,8 @@ describe("EOR instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.registers.A).toBe(0x00);
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(2);
   });
 

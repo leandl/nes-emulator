@@ -21,14 +21,14 @@ describe("ADC instruction integration tests", () => {
     expect(cpu.cycles - initialCycles).toBe(2);
 
     expect(cpu.registers.A).toBe(0x15);
-    expect(cpu.status.is(Flag.CARRY)).toBe(false);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
   });
 
   it("ADC includes carry flag", () => {
     cpu.registers.A = 0x10;
-    cpu.status.setFlag(Flag.CARRY, true);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, true);
 
     cpu.loadProgram([Opcode.ADD_WITH_CARRY_IMMEDIATE, 0x05]);
 
@@ -169,8 +169,8 @@ describe("ADC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.registers.A).toBe(0x00);
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
   });
 
   it("ADC sets OVERFLOW when positive + positive = negative", () => {
@@ -180,8 +180,8 @@ describe("ADC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.registers.A).toBe(0xa0);
-    expect(cpu.status.is(Flag.OVERFLOW)).toBe(true);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.OVERFLOW)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true);
   });
 
   it("ADC sets OVERFLOW when negative + negative = positive", () => {
@@ -191,7 +191,7 @@ describe("ADC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.registers.A).toBe(0x20);
-    expect(cpu.status.is(Flag.OVERFLOW)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.OVERFLOW)).toBe(true);
   });
 
   it("ADC does not set OVERFLOW when signs differ", () => {
@@ -200,6 +200,6 @@ describe("ADC instruction integration tests", () => {
     cpu.loadProgram([Opcode.ADD_WITH_CARRY_IMMEDIATE, 0x90]);
     cpu.step();
 
-    expect(cpu.status.is(Flag.OVERFLOW)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.OVERFLOW)).toBe(false);
   });
 });

@@ -21,7 +21,7 @@ export class RotateRightInstruction implements Instruction {
   constructor(private config: RotateRightInstructionConfig) {}
 
   execute(cpu: CPU) {
-    const carryIn = cpu.status.is(Flag.CARRY) ? 1 : 0;
+    const carryIn = cpu.registers.STATUS.is(Flag.CARRY) ? 1 : 0;
 
     if (this.config.mode === "REGISTER") {
       const value = cpu.registers[this.config.register];
@@ -31,8 +31,8 @@ export class RotateRightInstruction implements Instruction {
 
       cpu.registers[this.config.register] = result;
 
-      cpu.status.setFlag(Flag.CARRY, carryOut);
-      cpu.status.updateZeroAndNegative(result);
+      cpu.registers.STATUS.setFlag(Flag.CARRY, carryOut);
+      cpu.registers.STATUS.updateZeroAndNegative(result);
 
       return 2; // cycles
     }
@@ -49,8 +49,8 @@ export class RotateRightInstruction implements Instruction {
 
     cpu.memory.write(address, result);
 
-    cpu.status.setFlag(Flag.CARRY, carryOut);
-    cpu.status.updateZeroAndNegative(result);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, carryOut);
+    cpu.registers.STATUS.updateZeroAndNegative(result);
 
     return this.config.baseCycles;
   }

@@ -32,14 +32,14 @@ export class DecrementInstruction implements Instruction {
       cpu.memory.write(address, oldValue - 1);
 
       const newValue = cpu.memory.read(address);
-      cpu.status.updateZeroAndNegative(newValue);
+      cpu.registers.STATUS.updateZeroAndNegative(newValue);
       return this.config.baseCycles;
     }
 
     decrementMap[this.config.register](cpu);
 
     const value = cpu.registers[this.config.register];
-    cpu.status.updateZeroAndNegative(value);
+    cpu.registers.STATUS.updateZeroAndNegative(value);
 
     return 2; // cycles
   }

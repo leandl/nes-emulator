@@ -8,12 +8,12 @@ describe("CLD instruction", () => {
     const cpu = new CPU(allInstruction);
     const initialCycles = cpu.cycles;
 
-    cpu.status.setFlag(Flag.DECIMAL, true);
+    cpu.registers.STATUS.setFlag(Flag.DECIMAL, true);
 
     cpu.loadProgram([Opcode.CLEAR_DECIMAL_FLAG]);
     cpu.step();
 
-    expect(cpu.status.is(Flag.DECIMAL)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.DECIMAL)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

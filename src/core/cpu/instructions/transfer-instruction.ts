@@ -14,7 +14,7 @@ export class TransferInstruction implements Instruction {
     const value = cpu.registers[this.config.source];
 
     cpu.registers[this.config.destination] = value;
-    cpu.status.updateZeroAndNegative(value);
+    cpu.registers.STATUS.updateZeroAndNegative(value);
 
     return 2; // cycles
   }

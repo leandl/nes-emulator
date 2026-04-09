@@ -20,8 +20,8 @@ describe("TAY instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.registers.Y).toBe(0x42);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(2);
 
     // Zero flag
@@ -33,8 +33,8 @@ describe("TAY instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.registers.Y).toBe(0x00);
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(2);
 
     // Negative flag
@@ -46,8 +46,8 @@ describe("TAY instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.registers.Y).toBe(0x80);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

@@ -18,7 +18,7 @@ export class LoadInstruction implements Instruction {
     const value = cpu.memory.read(address);
 
     cpu.registers[this.config.register] = value;
-    cpu.status.updateZeroAndNegative(value);
+    cpu.registers.STATUS.updateZeroAndNegative(value);
 
     let cycles = this.config.baseCycles;
     if (this.config.extraCycleOnPageCross && pageCrossed) {

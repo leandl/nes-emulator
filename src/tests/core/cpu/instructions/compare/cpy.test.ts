@@ -18,26 +18,26 @@ describe("CPY instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.registers.Y).toBe(0x50); // não altera Y
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(2);
 
     cpu.loadProgram([Opcode.COMPARE_Y_REGISTER_IMMEDIATE, 0x50]);
     initialCycles = cpu.cycles;
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
 
     cpu.loadProgram([Opcode.COMPARE_Y_REGISTER_IMMEDIATE, 0x60]);
     initialCycles = cpu.cycles;
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(false);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true); // wrap (0x50 - 0x60)
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true); // wrap (0x50 - 0x60)
   });
 
   it("CPY zero page, consumes 3 cycles", () => {
@@ -49,9 +49,9 @@ describe("CPY instruction integration tests", () => {
 
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
 
     expect(cpu.cycles - initialCycles).toBe(3);
   });
@@ -65,9 +65,9 @@ describe("CPY instruction integration tests", () => {
 
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
 
     expect(cpu.cycles - initialCycles).toBe(4);
   });
@@ -80,8 +80,8 @@ describe("CPY instruction integration tests", () => {
     cpu.step();
 
     // 0x00 - 0x01 = 0xFF → bit 7 = 1
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true);
-    expect(cpu.status.is(Flag.CARRY)).toBe(false);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
   });
 });

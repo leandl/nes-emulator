@@ -20,8 +20,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr)).toBe(0x0f);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(5);
   });
 
@@ -34,8 +34,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr)).toBe(0x00);
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(5);
   });
 
@@ -48,16 +48,16 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr)).toBe(0xff);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(5);
   });
 
   it("DEC Zero Page does not affect CARRY or OVERFLOW", () => {
     const addr = 0x10;
     cpu.memory.write(addr, 0x05);
-    cpu.status.setFlag(Flag.CARRY, true);
-    cpu.status.setFlag(Flag.OVERFLOW, true);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, true);
+    cpu.registers.STATUS.setFlag(Flag.OVERFLOW, true);
 
     cpu.loadProgram([Opcode.DECREMENT_MEMORY_ZERO_PAGE, addr]);
 
@@ -65,8 +65,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr)).toBe(0x04);
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
-    expect(cpu.status.is(Flag.OVERFLOW)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.OVERFLOW)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(5);
   });
 
@@ -79,8 +79,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr)).toBe(0xff);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(5);
   });
 
@@ -95,8 +95,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr + 2)).toBe(0x0f);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(6);
   });
 
@@ -110,8 +110,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr + 2)).toBe(0x00);
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(6);
   });
 
@@ -125,8 +125,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr + 2)).toBe(0xff);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(6);
   });
 
@@ -134,8 +134,8 @@ describe("DEC instruction integration tests", () => {
     const addr = 0x10;
     cpu.registers.X = 2;
     cpu.memory.write(addr + 2, 0x05);
-    cpu.status.setFlag(Flag.CARRY, true);
-    cpu.status.setFlag(Flag.OVERFLOW, true);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, true);
+    cpu.registers.STATUS.setFlag(Flag.OVERFLOW, true);
 
     cpu.loadProgram([Opcode.DECREMENT_MEMORY_ZERO_PAGE_X, addr]);
 
@@ -143,8 +143,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr + 2)).toBe(0x04);
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
-    expect(cpu.status.is(Flag.OVERFLOW)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.OVERFLOW)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(6);
   });
 
@@ -158,8 +158,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr)).toBe(0x0f);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(6);
   });
 
@@ -172,8 +172,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr)).toBe(0x00);
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(6);
   });
 
@@ -186,16 +186,16 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr)).toBe(0xff);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(6);
   });
 
   it("DEC Absolute does not affect CARRY or OVERFLOW", () => {
     const addr = 0x1234;
     cpu.memory.write(addr, 0x05);
-    cpu.status.setFlag(Flag.CARRY, true);
-    cpu.status.setFlag(Flag.OVERFLOW, true);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, true);
+    cpu.registers.STATUS.setFlag(Flag.OVERFLOW, true);
 
     cpu.loadProgram([Opcode.DECREMENT_MEMORY_ABSOLUTE, addr & 0xff, addr >> 8]);
 
@@ -203,8 +203,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr)).toBe(0x04);
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
-    expect(cpu.status.is(Flag.OVERFLOW)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.OVERFLOW)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(6);
   });
 
@@ -223,8 +223,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr + 4)).toBe(0x0f);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(7);
   });
 
@@ -242,8 +242,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr + 4)).toBe(0x00);
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(7);
   });
 
@@ -261,8 +261,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr + 4)).toBe(0xff);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(7);
   });
 
@@ -270,8 +270,8 @@ describe("DEC instruction integration tests", () => {
     const addr = 0x1230;
     cpu.registers.X = 4;
     cpu.memory.write(addr + 4, 0x05);
-    cpu.status.setFlag(Flag.CARRY, true);
-    cpu.status.setFlag(Flag.OVERFLOW, true);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, true);
+    cpu.registers.STATUS.setFlag(Flag.OVERFLOW, true);
 
     cpu.loadProgram([
       Opcode.DECREMENT_MEMORY_ABSOLUTE_X,
@@ -283,8 +283,8 @@ describe("DEC instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.memory.read(addr + 4)).toBe(0x04);
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
-    expect(cpu.status.is(Flag.OVERFLOW)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.OVERFLOW)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(7);
   });
 });
