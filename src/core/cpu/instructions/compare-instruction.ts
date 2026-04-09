@@ -5,7 +5,7 @@ import type { CPURegister } from "../registers";
 import type { Instruction } from "./instruction";
 
 type CompareInstructionConfig = {
-  register: CPURegister;
+  register: CPURegister.ACCUMULATOR | CPURegister.X | CPURegister.Y;
   getAddress: AddressResolver;
   baseCycles: number;
   extraCycleOnPageCross?: boolean;

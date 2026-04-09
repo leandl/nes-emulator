@@ -4,7 +4,7 @@ import { CPURegister } from "../registers";
 import type { Instruction } from "./instruction";
 
 type StoreInstructionConfig = {
-  register: CPURegister;
+  register: CPURegister.ACCUMULATOR | CPURegister.X | CPURegister.Y;
   getAddress: AddressResolver;
   baseCycles: number;
 };

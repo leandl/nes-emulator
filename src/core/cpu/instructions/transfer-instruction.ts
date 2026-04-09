@@ -3,8 +3,8 @@ import { CPURegister } from "../registers";
 import { Instruction } from "./instruction";
 
 type TransferInstructionConfig = {
-  source: CPURegister;
-  destination: CPURegister;
+  source: CPURegister.ACCUMULATOR | CPURegister.X | CPURegister.Y;
+  destination: CPURegister.ACCUMULATOR | CPURegister.X | CPURegister.Y;
 };
 
 export class TransferInstruction implements Instruction {

@@ -186,6 +186,15 @@ export enum Opcode {
   BRANCH_IF_EQUAL = 0xf0,
   BRANCH_IF_NOT_EQUAL = 0xd0,
 
+  // Stack
+  //// Stack Accumulator
+  STACK_PUSH_ACCUMULATOR = 0x48,
+  STACK_PULL_ACCUMULATOR = 0x68,
+
+  //// Stack Processor Status
+  STACK_PUSH_PROCESSOR_STATUS = 0x08,
+  STACK_PULL_PROCESSOR_STATUS = 0x28,
+
   // Flag
   //// Carry
   CLEAR_CARRY_FLAG = 0x18,
@@ -330,22 +339,6 @@ export type ShiftOpcode =
   | Opcode.ROTATE_RIGHT_ABSOLUTE
   | Opcode.ROTATE_RIGHT_ABSOLUTE_X;
 
-export type FlagOpcode =
-  //// Carry
-  | Opcode.CLEAR_CARRY_FLAG
-  | Opcode.SET_CARRY_FLAG
-
-  //// Interrupt
-  | Opcode.CLEAR_INTERRUPT_FLAG
-  | Opcode.SET_INTERRUPT_FLAG
-
-  //// Decimal
-  | Opcode.CLEAR_DECIMAL_FLAG
-  | Opcode.SET_DECIMAL_FLAG
-
-  //// Overflow
-  | Opcode.CLEAR_OVERFLOW_FLAG;
-
 export type BitwiseOpcode =
   // Bitwise AND
   | Opcode.BITWISE_AND_IMMEDIATE
@@ -401,5 +394,30 @@ export type CompareOpcode =
   | Opcode.COMPARE_Y_REGISTER_IMMEDIATE
   | Opcode.COMPARE_Y_REGISTER_ZERO_PAGE
   | Opcode.COMPARE_Y_REGISTER_ABSOLUTE;
+
+export type StackOpcode =
+  // Stack Accumulator
+  | Opcode.STACK_PUSH_ACCUMULATOR
+  | Opcode.STACK_PULL_ACCUMULATOR
+
+  // Stack Processor Status
+  | Opcode.STACK_PUSH_PROCESSOR_STATUS
+  | Opcode.STACK_PULL_PROCESSOR_STATUS;
+
+export type FlagOpcode =
+  //// Carry
+  | Opcode.CLEAR_CARRY_FLAG
+  | Opcode.SET_CARRY_FLAG
+
+  //// Interrupt
+  | Opcode.CLEAR_INTERRUPT_FLAG
+  | Opcode.SET_INTERRUPT_FLAG
+
+  //// Decimal
+  | Opcode.CLEAR_DECIMAL_FLAG
+  | Opcode.SET_DECIMAL_FLAG
+
+  //// Overflow
+  | Opcode.CLEAR_OVERFLOW_FLAG;
 
 export type OtherOpcode = Opcode.NO_OPERATION;

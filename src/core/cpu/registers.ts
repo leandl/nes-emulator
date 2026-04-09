@@ -1,8 +1,7 @@
-// SP inicial do NES após reset.
-// A stack (0x0100–0x01FF) cresce para baixo e já começa parcialmente usada,
-
 import { CPUStatus } from "./cpu-status";
 
+// SP inicial do NES após reset.
+// A stack (0x0100–0x01FF) cresce para baixo e já começa parcialmente usada,
 // por isso não inicia em 0xFF.
 const INITIAL_STACK_POINTER = 0xfd;
 
@@ -10,6 +9,7 @@ export enum CPURegister {
   ACCUMULATOR = "A",
   X = "X",
   Y = "Y",
+  STATUS = "STATUS",
 }
 export class Registers {
   private _a = 0;
@@ -79,6 +79,10 @@ export class Registers {
     this._pc = (this._pc + 1) & 0xffff;
   }
 
+  incrementSP() {
+    this._sp = (this._sp + 1) & 0xff;
+  }
+
   incrementX() {
     this._x = (this._x + 1) & 0xff;
   }
@@ -89,6 +93,10 @@ export class Registers {
 
   decrementPC() {
     this._pc = (this._pc - 1) & 0xffff;
+  }
+
+  decrementSP() {
+    this._sp = (this._sp - 1) & 0xff;
   }
 
   decrementX() {
