@@ -10,6 +10,7 @@ import { allTransferInstructions } from "./all-transfer-instruction";
 import { allShiftInstructions } from "./all-shift-instructions";
 import { allFlagInstructions } from "./all-flag-instructions";
 import { allBitwiseInstructions } from "./all-bitwise-instructions";
+import { allCompareInstructions } from "./all-compare-instructions";
 
 export const allInstruction: Record<Opcode, Instruction> = {
   // Access
@@ -26,6 +27,9 @@ export const allInstruction: Record<Opcode, Instruction> = {
 
   // Bitwise
   ...allBitwiseInstructions,
+
+  // Compare
+  ...allCompareInstructions,
 
   // Jump
   [Opcode.JUMP_ABSOLUTE]: new JumpInstruction({
