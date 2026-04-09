@@ -15,7 +15,7 @@ const noCross = (address: number): AddressResult => ({
 const hasCrossed = (base: number, addr: number): boolean =>
   (base & 0xff00) !== (addr & 0xff00);
 
-export const Addressing: Record<string, AddressResolver> = {
+export const Addressing = {
   // LDA #$10
   immediate: (cpu: CPU) => noCross(cpu.registers.PC++),
 
