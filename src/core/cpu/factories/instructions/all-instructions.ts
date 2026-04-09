@@ -9,6 +9,7 @@ import { allOtherInstructions } from "./all-other-instructions";
 import { allTransferInstructions } from "./all-transfer-instruction";
 import { allShiftInstructions } from "./all-shift-instructions";
 import { allFlagInstructions } from "./all-flag-instructions";
+import { allBitwiseInstructions } from "./all-bitwise-instructions";
 
 export const allInstruction: Record<Opcode, Instruction> = {
   // Access
@@ -22,6 +23,9 @@ export const allInstruction: Record<Opcode, Instruction> = {
 
   // Shift
   ...allShiftInstructions,
+
+  // Bitwise
+  ...allBitwiseInstructions,
 
   // Jump
   [Opcode.JUMP_ABSOLUTE]: new JumpInstruction({

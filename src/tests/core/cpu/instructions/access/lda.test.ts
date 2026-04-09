@@ -74,6 +74,21 @@ describe("LDA instruction integration tests", () => {
     expect(cpu.cycles - initialCycles).toBe(4);
   });
 
+  it("LDA absolute X adds 1 cycle when page is crossed", () => {
+    cpu.registers.X = 0x01;
+
+    // 0x20FF + 0x01 = 0x2100
+    cpu.memory.write(0x2100, 0x42);
+
+    cpu.loadProgram([Opcode.LOAD_ACCUMULATOR_ABSOLUTE_X, 0xff, 0x20]);
+    const initialCycles = cpu.cycles;
+
+    cpu.step();
+
+    expect(cpu.registers.A).toBe(0x42);
+    expect(cpu.cycles - initialCycles).toBe(5); // 4 + 1
+  });
+
   it("LDA absolute Y loads accumulator, consumes 4 cycles (+1 if page crossed)", () => {
     cpu.registers.Y = 0x02;
     cpu.memory.write(0x2002, 0x77);
@@ -82,6 +97,20 @@ describe("LDA instruction integration tests", () => {
     cpu.step();
     expect(cpu.registers.A).toBe(0x77);
     expect(cpu.cycles - initialCycles).toBe(4);
+  });
+
+  it("LDA absolute Y adds 1 cycle when page is crossed", () => {
+    cpu.registers.Y = 0x01;
+
+    cpu.memory.write(0x2100, 0x99);
+
+    cpu.loadProgram([Opcode.LOAD_ACCUMULATOR_ABSOLUTE_Y, 0xff, 0x20]);
+    const initialCycles = cpu.cycles;
+
+    cpu.step();
+
+    expect(cpu.registers.A).toBe(0x99);
+    expect(cpu.cycles - initialCycles).toBe(5); // 4 + 1
   });
 
   it("LDA (indirect,X) loads accumulator, consumes 6 cycles", () => {
@@ -106,5 +135,24 @@ describe("LDA instruction integration tests", () => {
     cpu.step();
     expect(cpu.registers.A).toBe(0x55);
     expect(cpu.cycles - initialCycles).toBe(5);
+  });
+
+  it("LDA (indirect),Y adds 1 cycle when page is crossed", () => {
+    cpu.registers.Y = 0x01;
+
+    // ponteiro -> 0x20FF
+    cpu.memory.write(0x10, 0xff);
+    cpu.memory.write(0x11, 0x20);
+
+    // 0x20FF + 0x01 = 0x2100
+    cpu.memory.write(0x2100, 0x77);
+
+    cpu.loadProgram([Opcode.LOAD_ACCUMULATOR_INDIRECT_Y, 0x10]);
+    const initialCycles = cpu.cycles;
+
+    cpu.step();
+
+    expect(cpu.registers.A).toBe(0x77);
+    expect(cpu.cycles - initialCycles).toBe(6); // 5 + 1
   });
 });

@@ -73,4 +73,19 @@ describe("LDX instruction integration tests", () => {
     expect(cpu.registers.X).toBe(0x88);
     expect(cpu.cycles - initialCycles).toBe(4);
   });
+
+  it("LDX absolute Y adds 1 cycle when page is crossed", () => {
+    cpu.registers.Y = 0x01;
+
+    // 0x20FF + 0x01 = 0x2100 (page cross)
+    cpu.memory.write(0x2100, 0x42);
+
+    cpu.loadProgram([Opcode.LOAD_X_REGISTER_ABSOLUTE_Y, 0xff, 0x20]);
+    const initialCycles = cpu.cycles;
+
+    cpu.step();
+
+    expect(cpu.registers.X).toBe(0x42);
+    expect(cpu.cycles - initialCycles).toBe(5); // 4 + 1
+  });
 });
