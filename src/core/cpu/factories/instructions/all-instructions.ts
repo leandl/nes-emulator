@@ -1,7 +1,5 @@
-import { Addressing } from "../../addressing";
 import { Opcode } from "../../opcode";
 import type { Instruction } from "../../instructions/instruction";
-import { JumpInstruction } from "../../instructions/jump-instruction";
 import { NotImplementedInstruction } from "../../instructions/not-implement-instruction";
 import { allAccessInstructions } from "./all-access-instructions";
 import { allArithmeticInstructions } from "./all-arithmetic-instructions";
@@ -12,6 +10,7 @@ import { allFlagInstructions } from "./all-flag-instructions";
 import { allBitwiseInstructions } from "./all-bitwise-instructions";
 import { allCompareInstructions } from "./all-compare-instructions";
 import { allStackInstructions } from "./all-stack-instructions";
+import { allJumpInstructions } from "./all-jump-instructions";
 
 export const allInstruction: Record<Opcode, Instruction> = {
   // Access
@@ -32,19 +31,12 @@ export const allInstruction: Record<Opcode, Instruction> = {
   // Compare
   ...allCompareInstructions,
 
-  // Jump
-  [Opcode.JUMP_ABSOLUTE]: new JumpInstruction({
-    getAddress: Addressing.absolute,
-    baseCycles: 3,
-  }),
-  [Opcode.JUMP_INDIRECT]: new JumpInstruction({
-    getAddress: Addressing.indirect,
-    baseCycles: 5,
-  }),
-
   // Branch
   [Opcode.BRANCH_IF_EQUAL]: new NotImplementedInstruction(),
   [Opcode.BRANCH_IF_NOT_EQUAL]: new NotImplementedInstruction(),
+
+  // Jump
+  ...allJumpInstructions,
 
   // Stack
   ...allStackInstructions,
