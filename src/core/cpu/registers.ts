@@ -10,6 +10,7 @@ export enum CPURegister {
   X = "X",
   Y = "Y",
   STATUS = "STATUS",
+  STACK_POINTER = "SP",
 }
 export class Registers {
   private _a = 0;

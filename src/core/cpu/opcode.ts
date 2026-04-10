@@ -195,6 +195,10 @@ export enum Opcode {
   STACK_PUSH_PROCESSOR_STATUS = 0x08,
   STACK_PULL_PROCESSOR_STATUS = 0x28,
 
+  //// X Register <-> Stack Pointer
+  TRANSFER_STACK_POINTER_TO_X_REGISTER = 0xba,
+  TRANSFER_X_REGISTER_TO_STACK_POINTER = 0x9a,
+
   // Flag
   //// Carry
   CLEAR_CARRY_FLAG = 0x18,
@@ -402,7 +406,11 @@ export type StackOpcode =
 
   // Stack Processor Status
   | Opcode.STACK_PUSH_PROCESSOR_STATUS
-  | Opcode.STACK_PULL_PROCESSOR_STATUS;
+  | Opcode.STACK_PULL_PROCESSOR_STATUS
+
+  // Transfer X Register <-> Stack Pointer
+  | Opcode.TRANSFER_STACK_POINTER_TO_X_REGISTER
+  | Opcode.TRANSFER_X_REGISTER_TO_STACK_POINTER;
 
 export type FlagOpcode =
   //// Carry
