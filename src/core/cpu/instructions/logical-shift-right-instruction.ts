@@ -29,9 +29,9 @@ export class LogicalShiftRightInstruction implements Instruction {
 
       cpu.registers[this.config.register] = result;
 
-      cpu.status.setFlag(Flag.CARRY, carry);
-      cpu.status.setFlag(Flag.NEGATIVE, false); //
-      cpu.status.setFlag(Flag.ZERO, result === 0);
+      cpu.registers.STATUS.setFlag(Flag.CARRY, carry);
+      cpu.registers.STATUS.setFlag(Flag.NEGATIVE, false); //
+      cpu.registers.STATUS.setFlag(Flag.ZERO, result === 0);
 
       return 2; // cycles
     }
@@ -48,9 +48,9 @@ export class LogicalShiftRightInstruction implements Instruction {
 
     cpu.memory.write(address, result);
 
-    cpu.status.setFlag(Flag.CARRY, carry);
-    cpu.status.setFlag(Flag.NEGATIVE, false);
-    cpu.status.setFlag(Flag.ZERO, result === 0);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, carry);
+    cpu.registers.STATUS.setFlag(Flag.NEGATIVE, false);
+    cpu.registers.STATUS.setFlag(Flag.ZERO, result === 0);
 
     return this.config.baseCycles;
   }

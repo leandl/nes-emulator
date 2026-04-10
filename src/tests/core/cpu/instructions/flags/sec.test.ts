@@ -8,12 +8,12 @@ describe("SEC instruction", () => {
     const cpu = new CPU(allInstruction);
     const initialCycles = cpu.cycles;
 
-    cpu.status.setFlag(Flag.CARRY, false);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, false);
 
     cpu.loadProgram([Opcode.SET_CARRY_FLAG]);
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

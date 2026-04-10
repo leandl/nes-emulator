@@ -37,7 +37,7 @@ export class BitwiseOperatorInstruction implements Instruction {
     const result = this.operation(A, value);
 
     cpu.registers.A = result;
-    cpu.status.updateZeroAndNegative(result);
+    cpu.registers.STATUS.updateZeroAndNegative(result);
 
     let cycles = this.config.baseCycles;
     if (this.config.extraCycleOnPageCross && pageCrossed) {

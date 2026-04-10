@@ -19,9 +19,9 @@ describe("LSR instruction integration tests", () => {
     expect(cpu.cycles - initialCycles).toBe(2);
 
     expect(cpu.registers.A).toBe(0x02);
-    expect(cpu.status.is(Flag.CARRY)).toBe(false);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
 
     // Carry + Zero
     cpu.registers.A = 0x01;
@@ -32,9 +32,9 @@ describe("LSR instruction integration tests", () => {
     expect(cpu.cycles - initialCycles).toBe(2);
 
     expect(cpu.registers.A).toBe(0x00);
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
 
     // Negative sempre false
     cpu.registers.A = 0x80;
@@ -45,9 +45,9 @@ describe("LSR instruction integration tests", () => {
     expect(cpu.cycles - initialCycles).toBe(2);
 
     expect(cpu.registers.A).toBe(0x40);
-    expect(cpu.status.is(Flag.CARRY)).toBe(false);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
   });
 
   it("LSR zero page shifts memory correctly (5 cycles)", () => {
@@ -62,9 +62,9 @@ describe("LSR instruction integration tests", () => {
     expect(cpu.cycles - initialCycles).toBe(5);
 
     expect(cpu.memory.read(addr)).toBe(0x04);
-    expect(cpu.status.is(Flag.CARRY)).toBe(false);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
   });
 
   it("LSR zero page sets carry and zero (5 cycles)", () => {
@@ -79,9 +79,9 @@ describe("LSR instruction integration tests", () => {
     expect(cpu.cycles - initialCycles).toBe(5);
 
     expect(cpu.memory.read(addr)).toBe(0x00);
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
   });
 
   it("LSR absolute shifts memory correctly (6 cycles)", () => {

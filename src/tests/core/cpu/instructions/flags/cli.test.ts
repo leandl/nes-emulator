@@ -8,12 +8,12 @@ describe("CLI instruction", () => {
     const cpu = new CPU(allInstruction);
     const initialCycles = cpu.cycles;
 
-    cpu.status.setFlag(Flag.INTERRUPT_DISABLE, true);
+    cpu.registers.STATUS.setFlag(Flag.INTERRUPT_DISABLE, true);
 
     cpu.loadProgram([Opcode.CLEAR_INTERRUPT_FLAG]);
     cpu.step();
 
-    expect(cpu.status.is(Flag.INTERRUPT_DISABLE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.INTERRUPT_DISABLE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

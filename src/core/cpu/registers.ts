@@ -1,3 +1,5 @@
+import { CPUStatus } from "./cpu-status";
+
 // SP inicial do NES após reset.
 // A stack (0x0100–0x01FF) cresce para baixo e já começa parcialmente usada,
 // por isso não inicia em 0xFF.
@@ -7,6 +9,8 @@ export enum CPURegister {
   ACCUMULATOR = "A",
   X = "X",
   Y = "Y",
+  STATUS = "STATUS",
+  STACK_POINTER = "SP",
 }
 export class Registers {
   private _a = 0;
@@ -16,6 +20,7 @@ export class Registers {
   private _pc = 0;
 
   private _sp = INITIAL_STACK_POINTER;
+  private _status = new CPUStatus();
 
   // --- 8-bit registers ---
 
@@ -41,6 +46,12 @@ export class Registers {
 
   set Y(value: number) {
     this._y = value & 0xff;
+  }
+
+  // --- status register ---
+
+  get STATUS() {
+    return this._status;
   }
 
   // --- 16-bit register ---
@@ -69,6 +80,10 @@ export class Registers {
     this._pc = (this._pc + 1) & 0xffff;
   }
 
+  incrementSP() {
+    this._sp = (this._sp + 1) & 0xff;
+  }
+
   incrementX() {
     this._x = (this._x + 1) & 0xff;
   }
@@ -79,6 +94,10 @@ export class Registers {
 
   decrementPC() {
     this._pc = (this._pc - 1) & 0xffff;
+  }
+
+  decrementSP() {
+    this._sp = (this._sp - 1) & 0xff;
   }
 
   decrementX() {
@@ -104,6 +123,7 @@ export class Registers {
       Y: this._y.toString(16).padStart(2, "0"),
       PC: this._pc.toString(16).padStart(4, "0"),
       SP: this._sp.toString(16).padStart(2, "0"),
+      STATUS: this._status.raw.toString(2).padStart(8, "0"),
     };
   }
 }

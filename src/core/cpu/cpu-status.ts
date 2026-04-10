@@ -11,6 +11,20 @@ export class CPUStatus {
     this.value = v & 0xff;
   }
 
+  getForStackPush(): number {
+    // limpa BREAK e UNUSED do estado interno
+    const base = this.value & ~(Flag.BREAK | Flag.UNUSED);
+
+    // força ambos como 1 [PHP behavior (NV1BDIZC)]
+    return base | Flag.BREAK | Flag.UNUSED;
+  }
+
+  setFromStackPull(value: number): void {
+    // Remove BREAK (bit 4) e UNUSED (bit 5)
+    // e força UNUSED = 1 internamente
+    this.value = (value & ~Flag.BREAK) | Flag.UNUSED;
+  }
+
   setFlag(flag: Flag, enabled: boolean) {
     if (enabled) {
       this.value |= flag;

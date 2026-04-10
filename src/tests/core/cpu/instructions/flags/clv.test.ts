@@ -8,12 +8,12 @@ describe("CLV instruction", () => {
     const cpu = new CPU(allInstruction);
     const initialCycles = cpu.cycles;
 
-    cpu.status.setFlag(Flag.OVERFLOW, true);
+    cpu.registers.STATUS.setFlag(Flag.OVERFLOW, true);
 
     cpu.loadProgram([Opcode.CLEAR_OVERFLOW_FLAG]);
     cpu.step();
 
-    expect(cpu.status.is(Flag.OVERFLOW)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.OVERFLOW)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

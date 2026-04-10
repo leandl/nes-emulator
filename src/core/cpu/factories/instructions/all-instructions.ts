@@ -11,6 +11,7 @@ import { allShiftInstructions } from "./all-shift-instructions";
 import { allFlagInstructions } from "./all-flag-instructions";
 import { allBitwiseInstructions } from "./all-bitwise-instructions";
 import { allCompareInstructions } from "./all-compare-instructions";
+import { allStackInstructions } from "./all-stack-instructions";
 
 export const allInstruction: Record<Opcode, Instruction> = {
   // Access
@@ -44,6 +45,9 @@ export const allInstruction: Record<Opcode, Instruction> = {
   // Branch
   [Opcode.BRANCH_IF_EQUAL]: new NotImplementedInstruction(),
   [Opcode.BRANCH_IF_NOT_EQUAL]: new NotImplementedInstruction(),
+
+  // Stack
+  ...allStackInstructions,
 
   // Flags
   ...allFlagInstructions,

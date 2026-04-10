@@ -18,26 +18,26 @@ describe("CMP instruction integration tests", () => {
     cpu.step();
 
     expect(cpu.registers.A).toBe(0x50); // não altera A
-    expect(cpu.status.is(Flag.CARRY)).toBe(true); // 0x50 >= 0x40
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true); // 0x50 >= 0x40
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(2);
 
     cpu.loadProgram([Opcode.COMPARE_ACCUMULATOR_IMMEDIATE, 0x50]);
     initialCycles = cpu.cycles;
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
 
     cpu.loadProgram([Opcode.COMPARE_ACCUMULATOR_IMMEDIATE, 0x60]);
     initialCycles = cpu.cycles;
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(false);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true); // 0x50 - 0x60 = negativo (wrap)
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true); // 0x50 - 0x60 = negativo (wrap)
   });
 
   it("CMP zero page, consumes 3 cycles", () => {
@@ -49,7 +49,7 @@ describe("CMP instruction integration tests", () => {
 
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(3);
   });
 
@@ -64,7 +64,7 @@ describe("CMP instruction integration tests", () => {
 
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(4);
   });
 
@@ -77,7 +77,7 @@ describe("CMP instruction integration tests", () => {
 
     cpu.step();
 
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(4);
   });
 
@@ -92,7 +92,7 @@ describe("CMP instruction integration tests", () => {
 
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(4);
   });
 
@@ -121,9 +121,9 @@ describe("CMP instruction integration tests", () => {
 
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(true); // 0x30 >= 0x20
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true); // 0x30 >= 0x20
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
 
     expect(cpu.cycles - initialCycles).toBe(4);
   });
@@ -140,9 +140,9 @@ describe("CMP instruction integration tests", () => {
 
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(false); // 0x10 < 0x20
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false); // 0x10 < 0x20
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true);
 
     expect(cpu.cycles - initialCycles).toBe(5); // 4 + 1
   });
@@ -160,7 +160,7 @@ describe("CMP instruction integration tests", () => {
 
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(6);
   });
 
@@ -177,7 +177,7 @@ describe("CMP instruction integration tests", () => {
 
     cpu.step();
 
-    expect(cpu.status.is(Flag.CARRY)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(5);
   });
 
@@ -205,8 +205,8 @@ describe("CMP instruction integration tests", () => {
     cpu.step();
 
     // 0x00 - 0x01 = 0xFF → bit 7 = 1
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true);
-    expect(cpu.status.is(Flag.CARRY)).toBe(false);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
   });
 });

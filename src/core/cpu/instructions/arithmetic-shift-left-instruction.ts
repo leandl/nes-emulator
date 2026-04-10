@@ -29,8 +29,8 @@ export class ArithmeticShiftLeftInstruction implements Instruction {
 
       cpu.registers[this.config.register] = result;
 
-      cpu.status.setFlag(Flag.CARRY, carry);
-      cpu.status.updateZeroAndNegative(result);
+      cpu.registers.STATUS.setFlag(Flag.CARRY, carry);
+      cpu.registers.STATUS.updateZeroAndNegative(result);
 
       return 2; // cycles
     }
@@ -47,8 +47,8 @@ export class ArithmeticShiftLeftInstruction implements Instruction {
 
     cpu.memory.write(address, result);
 
-    cpu.status.setFlag(Flag.CARRY, carry);
-    cpu.status.updateZeroAndNegative(result);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, carry);
+    cpu.registers.STATUS.updateZeroAndNegative(result);
 
     return this.config.baseCycles;
   }

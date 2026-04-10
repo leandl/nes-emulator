@@ -19,9 +19,9 @@ export class BitTestInstruction implements Instruction {
 
     const result = A & value;
 
-    cpu.status.setFlag(Flag.ZERO, result === 0);
-    cpu.status.setFlag(Flag.NEGATIVE, (value & Flag.NEGATIVE) !== 0);
-    cpu.status.setFlag(Flag.OVERFLOW, (value & Flag.OVERFLOW) !== 0);
+    cpu.registers.STATUS.setFlag(Flag.ZERO, result === 0);
+    cpu.registers.STATUS.setFlag(Flag.NEGATIVE, (value & Flag.NEGATIVE) !== 0);
+    cpu.registers.STATUS.setFlag(Flag.OVERFLOW, (value & Flag.OVERFLOW) !== 0);
 
     return this.config.baseCycles;
   }

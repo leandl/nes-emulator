@@ -17,8 +17,8 @@ describe("DEX instruction integration tests", () => {
     let initialCycles = cpu.cycles;
     cpu.step();
     expect(cpu.registers.X).toBe(0x0f);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(2);
 
     // Zero flag
@@ -27,8 +27,8 @@ describe("DEX instruction integration tests", () => {
     initialCycles = cpu.cycles;
     cpu.step();
     expect(cpu.registers.X).toBe(0x00);
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(2);
 
     // Negative flag (underflow)
@@ -37,8 +37,8 @@ describe("DEX instruction integration tests", () => {
     initialCycles = cpu.cycles;
     cpu.step();
     expect(cpu.registers.X).toBe(0xff);
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true);
     expect(cpu.cycles - initialCycles).toBe(2);
   });
 });

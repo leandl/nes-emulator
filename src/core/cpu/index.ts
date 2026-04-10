@@ -1,6 +1,5 @@
 import { Addressing } from "./addressing";
 import { Memory } from "./memory";
-import { CPUStatus } from "./cpu-status";
 import type { Instruction } from "./instructions/instruction";
 
 import { Opcode } from "./opcode";
@@ -8,7 +7,6 @@ import { Registers } from "./registers";
 
 export class CPU {
   registers = new Registers();
-  status = new CPUStatus();
   memory = new Memory();
 
   cycles = 0;

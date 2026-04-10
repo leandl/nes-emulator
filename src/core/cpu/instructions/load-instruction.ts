@@ -4,7 +4,7 @@ import type { CPURegister } from "../registers";
 import type { Instruction } from "./instruction";
 
 type LoadInstructionConfig = {
-  register: CPURegister;
+  register: CPURegister.ACCUMULATOR | CPURegister.X | CPURegister.Y;
   getAddress: AddressResolver;
   baseCycles: number;
   extraCycleOnPageCross?: boolean;
@@ -18,7 +18,7 @@ export class LoadInstruction implements Instruction {
     const value = cpu.memory.read(address);
 
     cpu.registers[this.config.register] = value;
-    cpu.status.updateZeroAndNegative(value);
+    cpu.registers.STATUS.updateZeroAndNegative(value);
 
     let cycles = this.config.baseCycles;
     if (this.config.extraCycleOnPageCross && pageCrossed) {

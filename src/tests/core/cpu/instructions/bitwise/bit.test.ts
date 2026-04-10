@@ -23,11 +23,11 @@ describe("BIT instruction integration tests", () => {
     expect(cpu.registers.A).toBe(0b00110000);
 
     // A & M = 0 → Z = 1
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
 
     // vindo da memória
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true); // bit 7
-    expect(cpu.status.is(Flag.OVERFLOW)).toBe(true); // bit 6
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true); // bit 7
+    expect(cpu.registers.STATUS.is(Flag.OVERFLOW)).toBe(true); // bit 6
 
     expect(cpu.cycles - initialCycles).toBe(3);
   });
@@ -40,9 +40,9 @@ describe("BIT instruction integration tests", () => {
 
     cpu.step();
 
-    expect(cpu.status.is(Flag.ZERO)).toBe(false);
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(true);
-    expect(cpu.status.is(Flag.OVERFLOW)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.OVERFLOW)).toBe(false);
   });
 
   it("BIT absolute sets flags correctly, consumes 4 cycles", () => {
@@ -57,10 +57,10 @@ describe("BIT instruction integration tests", () => {
     expect(cpu.registers.A).toBe(0b00001111);
 
     // A & M = 0 → Z = 1
-    expect(cpu.status.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
 
-    expect(cpu.status.is(Flag.NEGATIVE)).toBe(false);
-    expect(cpu.status.is(Flag.OVERFLOW)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.OVERFLOW)).toBe(true);
 
     expect(cpu.cycles - initialCycles).toBe(4);
   });
