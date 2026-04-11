@@ -4,6 +4,8 @@ import { Addressing } from "../../addressing";
 import { JumpInstruction } from "../../instructions/jump-instruction";
 import { JumpToSubroutineInstruction } from "../../instructions/jump-to-subroutine-instruction";
 import { ReturnFromSubroutineInstruction } from "../../instructions/return-from-subroutine-instruction";
+import { BreakInstruction } from "../../instructions/break-instruction";
+import { ReturnFromInterruptInstruction } from "../../instructions/return-from-interrupt-instruction";
 
 export const allJumpInstructions: Record<JumpOpcode, Instruction> = {
   // Jump
@@ -21,4 +23,10 @@ export const allJumpInstructions: Record<JumpOpcode, Instruction> = {
 
   // Return From Subroutine
   [Opcode.RETURN_FROM_SUBROUTINE]: new ReturnFromSubroutineInstruction(),
+
+  // Break
+  [Opcode.BREAK]: new BreakInstruction(),
+
+  // Return From Interrupt
+  [Opcode.RETURN_FROM_INTERRUPT]: new ReturnFromInterruptInstruction(),
 };

@@ -178,6 +178,10 @@ export enum Opcode {
   COMPARE_Y_REGISTER_ZERO_PAGE = 0xc4,
   COMPARE_Y_REGISTER_ABSOLUTE = 0xcc,
 
+  // Branch
+  BRANCH_IF_EQUAL = 0xf0,
+  BRANCH_IF_NOT_EQUAL = 0xd0,
+
   // Jump
   //// Jump
   JUMP_ABSOLUTE = 0x4c,
@@ -189,9 +193,11 @@ export enum Opcode {
   //// Return From Subroutine
   RETURN_FROM_SUBROUTINE = 0x60,
 
-  // Branch
-  BRANCH_IF_EQUAL = 0xf0,
-  BRANCH_IF_NOT_EQUAL = 0xd0,
+  //// Break
+  BREAK = 0x00,
+
+  //// Return From Interrupt
+  RETURN_FROM_INTERRUPT = 0x40,
 
   // Stack
   //// Stack Accumulator
@@ -415,7 +421,13 @@ export type JumpOpcode =
   | Opcode.JUMP_TO_SUBROUTINE
 
   // Return From Subroutine
-  | Opcode.RETURN_FROM_SUBROUTINE;
+  | Opcode.RETURN_FROM_SUBROUTINE
+
+  // Break
+  | Opcode.BREAK
+
+  // Return From Interrupt
+  | Opcode.RETURN_FROM_INTERRUPT;
 
 export type StackOpcode =
   // Stack Accumulator
