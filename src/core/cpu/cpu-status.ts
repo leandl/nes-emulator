@@ -3,6 +3,12 @@ import { Flag } from "./flag";
 export class CPUStatus {
   private value: number = Flag.INTERRUPT_DISABLE | Flag.UNUSED; // valor inicial padrão do NES
 
+  constructor(initialStatus?: number) {
+    if (initialStatus !== undefined) {
+      this.value = initialStatus;
+    }
+  }
+
   get raw() {
     return this.value;
   }

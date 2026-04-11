@@ -1,8 +1,7 @@
 import type { CPU } from "..";
 import { CPURegister } from "../registers";
+import { Stack } from "../stack";
 import type { Instruction } from "./instruction";
-
-const STACK_BASE = 0x0100;
 
 type StackInstructionConfig = {
   mode: "PUSH" | "PULL";
@@ -22,20 +21,13 @@ export class StackInstruction implements Instruction {
 
   private push(cpu: CPU): number {
     const value = this.getValueForPush(cpu);
-
-    const address = STACK_BASE + cpu.registers.SP;
-    cpu.memory.write(address, value);
-
-    cpu.registers.decrementSP();
+    Stack.push(cpu, value);
 
     return 3; // cycles
   }
 
   private pull(cpu: CPU): number {
-    cpu.registers.incrementSP();
-
-    const address = STACK_BASE + cpu.registers.SP;
-    const value = cpu.memory.read(address);
+    const value = Stack.pull(cpu);
 
     this.setValueFromPull(cpu, value);
 
