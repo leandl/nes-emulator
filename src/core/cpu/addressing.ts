@@ -111,4 +111,17 @@ export const Addressing = {
     const address = (hi << 8) | lo;
     return noCross(address);
   },
+
+  // Branch (relative)
+  relative: (cpu: CPU) => {
+    const offset = cpu.memory.read(cpu.registers.PC++);
+
+    // converte para signed [-128, 127]
+    const signed = offset < 0x80 ? offset : offset - 0x100;
+
+    return {
+      address: signed,
+      pageCrossed: false, // será calculado na instruction
+    };
+  },
 };
