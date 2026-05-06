@@ -179,8 +179,21 @@ export enum Opcode {
   COMPARE_Y_REGISTER_ABSOLUTE = 0xcc,
 
   // Branch
+  //// Zero Flag
   BRANCH_IF_EQUAL = 0xf0,
   BRANCH_IF_NOT_EQUAL = 0xd0,
+
+  //// Carry Flag
+  BRANCH_IF_CARRY_SET = 0xb0,
+  BRANCH_IF_CARRY_CLEAR = 0x90,
+
+  //// Negative Flag
+  BRANCH_IF_MINUS = 0x30,
+  BRANCH_IF_POSITIVE = 0x10,
+
+  //// Overflow Flag
+  BRANCH_IF_OVERFLOW_SET = 0x70,
+  BRANCH_IF_OVERFLOW_CLEAR = 0x50,
 
   // Jump
   //// Jump
@@ -411,6 +424,23 @@ export type CompareOpcode =
   | Opcode.COMPARE_Y_REGISTER_IMMEDIATE
   | Opcode.COMPARE_Y_REGISTER_ZERO_PAGE
   | Opcode.COMPARE_Y_REGISTER_ABSOLUTE;
+
+export type BranchOpcode =
+  // Zero Flag
+  | Opcode.BRANCH_IF_EQUAL
+  | Opcode.BRANCH_IF_NOT_EQUAL
+
+  // Carry Flag
+  | Opcode.BRANCH_IF_CARRY_SET
+  | Opcode.BRANCH_IF_CARRY_CLEAR
+
+  // Negative Flag
+  | Opcode.BRANCH_IF_MINUS
+  | Opcode.BRANCH_IF_POSITIVE
+
+  // Overflow Flag
+  | Opcode.BRANCH_IF_OVERFLOW_SET
+  | Opcode.BRANCH_IF_OVERFLOW_CLEAR;
 
 export type JumpOpcode =
   // Jump

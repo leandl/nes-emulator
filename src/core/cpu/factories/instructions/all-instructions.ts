@@ -1,6 +1,6 @@
-import { Opcode } from "../../opcode";
+import type { Opcode } from "../../opcode";
 import type { Instruction } from "../../instructions/instruction";
-import { NotImplementedInstruction } from "../../instructions/not-implement-instruction";
+
 import { allAccessInstructions } from "./all-access-instructions";
 import { allArithmeticInstructions } from "./all-arithmetic-instructions";
 import { allOtherInstructions } from "./all-other-instructions";
@@ -11,6 +11,7 @@ import { allBitwiseInstructions } from "./all-bitwise-instructions";
 import { allCompareInstructions } from "./all-compare-instructions";
 import { allStackInstructions } from "./all-stack-instructions";
 import { allJumpInstructions } from "./all-jump-instructions";
+import { allBranchInstructions } from "./all-branch-instructions";
 
 export const allInstruction: Record<Opcode, Instruction> = {
   // Access
@@ -32,8 +33,7 @@ export const allInstruction: Record<Opcode, Instruction> = {
   ...allCompareInstructions,
 
   // Branch
-  [Opcode.BRANCH_IF_EQUAL]: new NotImplementedInstruction(),
-  [Opcode.BRANCH_IF_NOT_EQUAL]: new NotImplementedInstruction(),
+  ...allBranchInstructions,
 
   // Jump
   ...allJumpInstructions,
