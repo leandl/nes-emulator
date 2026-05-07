@@ -39,15 +39,15 @@ export class RotateLeftInstruction implements Instruction {
 
     // MEMORY
     const { address } = this.config.getAddress(cpu);
-    const value = cpu.memory.read(address);
+    const value = cpu.read(address);
 
     // Read-Modify-Write
-    cpu.memory.write(address, value);
+    cpu.write(address, value);
 
     const carryOut = (value & 0x80) !== 0;
     const result = ((value << 1) | carryIn) & 0xff;
 
-    cpu.memory.write(address, result);
+    cpu.write(address, result);
 
     cpu.registers.STATUS.setFlag(Flag.CARRY, carryOut);
     cpu.registers.STATUS.updateZeroAndNegative(result);

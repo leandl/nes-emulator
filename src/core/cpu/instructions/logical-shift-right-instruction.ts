@@ -38,15 +38,15 @@ export class LogicalShiftRightInstruction implements Instruction {
 
     // MEMORY
     const { address } = this.config.getAddress(cpu);
-    const value = cpu.memory.read(address);
+    const value = cpu.read(address);
 
     // Read-Modify-Write
-    cpu.memory.write(address, value);
+    cpu.write(address, value);
 
     const carry = (value & 0x01) !== 0;
     const result = (value >> 1) & 0xff;
 
-    cpu.memory.write(address, result);
+    cpu.write(address, result);
 
     cpu.registers.STATUS.setFlag(Flag.CARRY, carry);
     cpu.registers.STATUS.setFlag(Flag.NEGATIVE, false);

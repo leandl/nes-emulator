@@ -34,14 +34,14 @@ export enum Opcode {
   STORE_ACCUMULATOR_INDIRECT_Y = 0x91,
 
   //// Store X Register
-  STORE_X_REGISTER_ZERO_PAGE = 0x84,
-  STORE_X_REGISTER_ZERO_PAGE_Y = 0x94,
-  STORE_X_REGISTER_ABSOLUTE = 0x8c,
+  STORE_Y_REGISTER_ZERO_PAGE = 0x84,
+  STORE_Y_REGISTER_ZERO_PAGE_X = 0x94,
+  STORE_Y_REGISTER_ABSOLUTE = 0x8c,
 
   //// Store Y Register
-  STORE_Y_REGISTER_ZERO_PAGE = 0x86,
-  STORE_Y_REGISTER_ZERO_PAGE_X = 0x96,
-  STORE_Y_REGISTER_ABSOLUTE = 0x8e,
+  STORE_X_REGISTER_ZERO_PAGE = 0x86,
+  STORE_X_REGISTER_ZERO_PAGE_Y = 0x96,
+  STORE_X_REGISTER_ABSOLUTE = 0x8e,
 
   // Transfer
   //// X Register <-> Accumulator
@@ -244,6 +244,42 @@ export enum Opcode {
   // Other
   //// System
   NO_OPERATION = 0xea,
+
+  //// NOP (ILEGAIS)
+  ////// Immediate
+  NO_OPERATION_IMMEDIATE = 0x80,
+
+  ////// Zero Page
+  NO_OPERATION_ZERO_PAGE_04 = 0x04,
+  NO_OPERATION_ZERO_PAGE_44 = 0x44,
+  NO_OPERATION_ZERO_PAGE_64 = 0x64,
+
+  ////// Zero Page,X
+  NO_OPERATION_ZERO_X_14 = 0x14,
+  NO_OPERATION_ZERO_X_34 = 0x34,
+  NO_OPERATION_ZERO_X_54 = 0x54,
+  NO_OPERATION_ZERO_X_74 = 0x74,
+  NO_OPERATION_ZERO_X_D4 = 0xd4,
+  NO_OPERATION_ZERO_X_F4 = 0xf4,
+
+  ////// Absolute
+  NO_OPERATION_ABSOLUTE = 0x0c,
+
+  ////// Absolute,X
+  NO_OPERATION_ABSOLUTE_X_1C = 0x1c,
+  NO_OPERATION_ABSOLUTE_X_3C = 0x3c,
+  NO_OPERATION_ABSOLUTE_X_5C = 0x5c,
+  NO_OPERATION_ABSOLUTE_X_7C = 0x7c,
+  NO_OPERATION_ABSOLUTE_X_DC = 0xdc,
+  NO_OPERATION_ABSOLUTE_X_FC = 0xfc,
+
+  ////// Implied (ilegais)
+  NO_OPERATION_1A = 0x1a,
+  NO_OPERATION_3A = 0x3a,
+  NO_OPERATION_5A = 0x5a,
+  NO_OPERATION_7A = 0x7a,
+  NO_OPERATION_DA = 0xda,
+  NO_OPERATION_FA = 0xfa,
 }
 
 export type AccessOpcode =
@@ -488,4 +524,43 @@ export type FlagOpcode =
   //// Overflow
   | Opcode.CLEAR_OVERFLOW_FLAG;
 
-export type OtherOpcode = Opcode.NO_OPERATION;
+export type OtherOpcode =
+  // System
+  | Opcode.NO_OPERATION
+
+  // NOP (ILEGAIS)
+
+  //// Immediate
+  | Opcode.NO_OPERATION_IMMEDIATE
+
+  //// Zero Page
+  | Opcode.NO_OPERATION_ZERO_PAGE_04
+  | Opcode.NO_OPERATION_ZERO_PAGE_44
+  | Opcode.NO_OPERATION_ZERO_PAGE_64
+
+  //// Zero Page,X
+  | Opcode.NO_OPERATION_ZERO_X_14
+  | Opcode.NO_OPERATION_ZERO_X_34
+  | Opcode.NO_OPERATION_ZERO_X_54
+  | Opcode.NO_OPERATION_ZERO_X_74
+  | Opcode.NO_OPERATION_ZERO_X_D4
+  | Opcode.NO_OPERATION_ZERO_X_F4
+
+  //// Absolute
+  | Opcode.NO_OPERATION_ABSOLUTE
+
+  //// Absolute,X
+  | Opcode.NO_OPERATION_ABSOLUTE_X_1C
+  | Opcode.NO_OPERATION_ABSOLUTE_X_3C
+  | Opcode.NO_OPERATION_ABSOLUTE_X_5C
+  | Opcode.NO_OPERATION_ABSOLUTE_X_7C
+  | Opcode.NO_OPERATION_ABSOLUTE_X_DC
+  | Opcode.NO_OPERATION_ABSOLUTE_X_FC
+
+  //// Implied (ilegais)
+  | Opcode.NO_OPERATION_1A
+  | Opcode.NO_OPERATION_3A
+  | Opcode.NO_OPERATION_5A
+  | Opcode.NO_OPERATION_7A
+  | Opcode.NO_OPERATION_DA
+  | Opcode.NO_OPERATION_FA;

@@ -14,7 +14,7 @@ export class BitTestInstruction implements Instruction {
   execute(cpu: CPU) {
     const { address } = this.config.getAddress(cpu);
 
-    const value = cpu.memory.read(address);
+    const value = cpu.read(address);
     const A = cpu.registers.A;
 
     const result = A & value;

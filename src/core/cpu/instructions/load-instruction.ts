@@ -15,7 +15,7 @@ export class LoadInstruction implements Instruction {
 
   execute(cpu: CPU) {
     const { address, pageCrossed } = this.config.getAddress(cpu);
-    const value = cpu.memory.read(address);
+    const value = cpu.read(address);
 
     cpu.registers[this.config.register] = value;
     cpu.registers.STATUS.updateZeroAndNegative(value);

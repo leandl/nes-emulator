@@ -14,7 +14,7 @@ export class StoreInstruction implements Instruction {
 
   execute(cpu: CPU) {
     const { address } = this.config.getAddress(cpu);
-    cpu.memory.write(address, cpu.registers[this.config.register]);
+    cpu.write(address, cpu.registers[this.config.register]);
 
     return this.config.baseCycles;
   }

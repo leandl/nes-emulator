@@ -28,10 +28,10 @@ export class DecrementInstruction implements Instruction {
     if (this.config.mode === "MEMORY") {
       const { address } = this.config.getAddress(cpu);
 
-      const oldValue = cpu.memory.read(address);
-      cpu.memory.write(address, oldValue - 1);
+      const oldValue = cpu.read(address);
+      cpu.write(address, oldValue - 1);
 
-      const newValue = cpu.memory.read(address);
+      const newValue = cpu.read(address);
       cpu.registers.STATUS.updateZeroAndNegative(newValue);
       return this.config.baseCycles;
     }

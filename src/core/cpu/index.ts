@@ -1,26 +1,29 @@
+import { Bus } from "../bus";
 import { Addressing } from "./addressing";
-import { Memory } from "./memory";
 import type { Instruction } from "./instructions/instruction";
 
 import { Opcode } from "./opcode";
 import { Registers } from "./registers";
-
 export class CPU {
   registers = new Registers();
-  memory = new Memory();
-
   cycles = 0;
 
-  constructor(private instructions: Record<Opcode, Instruction>) {}
+  constructor(
+    private bus: Bus,
+    private instructions: Record<Opcode, Instruction>,
+  ) {}
 
-  loadProgram(program: number[], startAddress = 0x8000) {
-    this.memory.load(program, startAddress);
-    this.registers.PC = startAddress;
+  read(addr: number): number {
+    return this.bus.cpuRead(addr);
+  }
+
+  write(addr: number, data: number): void {
+    this.bus.cpuWrite(addr, data);
   }
 
   step() {
     const { address } = Addressing.immediate(this);
-    const opcode = this.memory.read(address) as Opcode;
+    const opcode = this.read(address) as Opcode;
 
     const instruction = this.instructions[opcode];
     if (!instruction) {
@@ -33,5 +36,11 @@ export class CPU {
     if (cycles) {
       this.cycles += cycles;
     }
+  }
+
+  reset() {
+    const lo = this.read(0xfffc);
+    const hi = this.read(0xfffd);
+    this.registers.PC = (hi << 8) | lo;
   }
 }
