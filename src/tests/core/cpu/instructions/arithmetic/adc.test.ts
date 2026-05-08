@@ -1,19 +1,16 @@
 import { CPU } from "../../../../../core/cpu";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("ADC instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("ADC immediate (2 cycles)", () => {
-    cpu.registers.A = 0x10;
+    cpu = createCPU(new FakeRom([Opcode.ADD_WITH_CARRY_IMMEDIATE, 0x05]));
 
-    cpu.loadProgram([Opcode.ADD_WITH_CARRY_IMMEDIATE, 0x05]);
+    cpu.registers.A = 0x10;
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -27,10 +24,10 @@ describe("ADC instruction integration tests", () => {
   });
 
   it("ADC includes carry flag", () => {
+    cpu = createCPU(new FakeRom([Opcode.ADD_WITH_CARRY_IMMEDIATE, 0x05]));
+
     cpu.registers.A = 0x10;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.ADD_WITH_CARRY_IMMEDIATE, 0x05]);
 
     cpu.step();
 
@@ -38,10 +35,10 @@ describe("ADC instruction integration tests", () => {
   });
 
   it("ADC zero page (3 cycles)", () => {
-    cpu.memory.write(0x10, 0x05);
-    cpu.registers.A = 0x10;
+    cpu = createCPU(new FakeRom([Opcode.ADD_WITH_CARRY_ZERO_PAGE, 0x10]));
 
-    cpu.loadProgram([Opcode.ADD_WITH_CARRY_ZERO_PAGE, 0x10]);
+    cpu.write(0x10, 0x05);
+    cpu.registers.A = 0x10;
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -51,11 +48,11 @@ describe("ADC instruction integration tests", () => {
   });
 
   it("ADC zero page,X (4 cycles)", () => {
-    cpu.registers.X = 0x01;
-    cpu.memory.write(0x11, 0x05);
-    cpu.registers.A = 0x10;
+    cpu = createCPU(new FakeRom([Opcode.ADD_WITH_CARRY_ZERO_PAGE_X, 0x10]));
 
-    cpu.loadProgram([Opcode.ADD_WITH_CARRY_ZERO_PAGE_X, 0x10]);
+    cpu.registers.X = 0x01;
+    cpu.write(0x11, 0x05);
+    cpu.registers.A = 0x10;
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -65,10 +62,10 @@ describe("ADC instruction integration tests", () => {
   });
 
   it("ADC absolute (4 cycles)", () => {
-    cpu.memory.write(0x1234, 0x05);
-    cpu.registers.A = 0x10;
+    cpu = createCPU(new FakeRom([Opcode.ADD_WITH_CARRY_ABSOLUTE, 0x34, 0x12]));
 
-    cpu.loadProgram([Opcode.ADD_WITH_CARRY_ABSOLUTE, 0x34, 0x12]);
+    cpu.write(0x1234, 0x05);
+    cpu.registers.A = 0x10;
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -78,11 +75,13 @@ describe("ADC instruction integration tests", () => {
   });
 
   it("ADC absolute,X without page cross (4 cycles)", () => {
-    cpu.registers.X = 0x01;
-    cpu.memory.write(0x2001, 0x05);
-    cpu.registers.A = 0x10;
+    cpu = createCPU(
+      new FakeRom([Opcode.ADD_WITH_CARRY_ABSOLUTE_X, 0x00, 0x10]),
+    );
 
-    cpu.loadProgram([Opcode.ADD_WITH_CARRY_ABSOLUTE_X, 0x00, 0x20]);
+    cpu.registers.X = 0x01;
+    cpu.write(0x1001, 0x05);
+    cpu.registers.A = 0x10;
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -92,11 +91,13 @@ describe("ADC instruction integration tests", () => {
   });
 
   it("ADC absolute,X with page cross (5 cycles)", () => {
-    cpu.registers.X = 0x01;
-    cpu.memory.write(0x2100, 0x05); // cruzou página
-    cpu.registers.A = 0x10;
+    cpu = createCPU(
+      new FakeRom([Opcode.ADD_WITH_CARRY_ABSOLUTE_X, 0xff, 0x10]),
+    );
 
-    cpu.loadProgram([Opcode.ADD_WITH_CARRY_ABSOLUTE_X, 0xff, 0x20]);
+    cpu.registers.X = 0x01;
+    cpu.write(0x1100, 0x05); // cruzou página
+    cpu.registers.A = 0x10;
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -106,16 +107,14 @@ describe("ADC instruction integration tests", () => {
   });
 
   it("ADC (indirect,X) (6 cycles)", () => {
-    cpu.registers.X = 0x04;
+    cpu = createCPU(new FakeRom([Opcode.ADD_WITH_CARRY_INDIRECT_X, 0x10]));
 
     // ponteiro em zero page
-    cpu.memory.write(0x14, 0x00);
-    cpu.memory.write(0x15, 0x30);
-
-    cpu.memory.write(0x3000, 0x05);
+    cpu.write(0x14, 0x00);
+    cpu.write(0x15, 0x11);
+    cpu.write(0x1100, 0x05);
+    cpu.registers.X = 0x04;
     cpu.registers.A = 0x10;
-
-    cpu.loadProgram([Opcode.ADD_WITH_CARRY_INDIRECT_X, 0x10]);
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -125,15 +124,13 @@ describe("ADC instruction integration tests", () => {
   });
 
   it("ADC (indirect),Y without page cross (5 cycles)", () => {
+    cpu = createCPU(new FakeRom([Opcode.ADD_WITH_CARRY_INDIRECT_Y, 0x10]));
+
+    cpu.write(0x10, 0x00);
+    cpu.write(0x11, 0x10);
+    cpu.write(0x1001, 0x05);
     cpu.registers.Y = 0x01;
-
-    cpu.memory.write(0x10, 0x00);
-    cpu.memory.write(0x11, 0x20);
-
-    cpu.memory.write(0x2001, 0x05);
     cpu.registers.A = 0x10;
-
-    cpu.loadProgram([Opcode.ADD_WITH_CARRY_INDIRECT_Y, 0x10]);
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -143,15 +140,13 @@ describe("ADC instruction integration tests", () => {
   });
 
   it("ADC (indirect),Y with page cross (6 cycles)", () => {
-    cpu.registers.Y = 0x01;
+    cpu = createCPU(new FakeRom([Opcode.ADD_WITH_CARRY_INDIRECT_Y, 0x10]));
 
-    cpu.memory.write(0x10, 0xff);
-    cpu.memory.write(0x11, 0x20);
-
-    cpu.memory.write(0x2100, 0x05);
+    cpu.write(0x10, 0xff);
+    cpu.write(0x11, 0x10);
+    cpu.write(0x1100, 0x05);
     cpu.registers.A = 0x10;
-
-    cpu.loadProgram([Opcode.ADD_WITH_CARRY_INDIRECT_Y, 0x10]);
+    cpu.registers.Y = 0x01;
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -163,9 +158,10 @@ describe("ADC instruction integration tests", () => {
   // --- FLAGS (mantive seus testes) ---
 
   it("ADC sets CARRY on unsigned overflow", () => {
+    cpu = createCPU(new FakeRom([Opcode.ADD_WITH_CARRY_IMMEDIATE, 0x01]));
+
     cpu.registers.A = 0xff;
 
-    cpu.loadProgram([Opcode.ADD_WITH_CARRY_IMMEDIATE, 0x01]);
     cpu.step();
 
     expect(cpu.registers.A).toBe(0x00);
@@ -174,9 +170,10 @@ describe("ADC instruction integration tests", () => {
   });
 
   it("ADC sets OVERFLOW when positive + positive = negative", () => {
+    cpu = createCPU(new FakeRom([Opcode.ADD_WITH_CARRY_IMMEDIATE, 0x50]));
+
     cpu.registers.A = 0x50;
 
-    cpu.loadProgram([Opcode.ADD_WITH_CARRY_IMMEDIATE, 0x50]);
     cpu.step();
 
     expect(cpu.registers.A).toBe(0xa0);
@@ -185,9 +182,10 @@ describe("ADC instruction integration tests", () => {
   });
 
   it("ADC sets OVERFLOW when negative + negative = positive", () => {
+    cpu = createCPU(new FakeRom([Opcode.ADD_WITH_CARRY_IMMEDIATE, 0x90]));
+
     cpu.registers.A = 0x90;
 
-    cpu.loadProgram([Opcode.ADD_WITH_CARRY_IMMEDIATE, 0x90]);
     cpu.step();
 
     expect(cpu.registers.A).toBe(0x20);
@@ -195,9 +193,10 @@ describe("ADC instruction integration tests", () => {
   });
 
   it("ADC does not set OVERFLOW when signs differ", () => {
+    cpu = createCPU(new FakeRom([Opcode.ADD_WITH_CARRY_IMMEDIATE, 0x90]));
+
     cpu.registers.A = 0x50;
 
-    cpu.loadProgram([Opcode.ADD_WITH_CARRY_IMMEDIATE, 0x90]);
     cpu.step();
 
     expect(cpu.registers.STATUS.is(Flag.OVERFLOW)).toBe(false);

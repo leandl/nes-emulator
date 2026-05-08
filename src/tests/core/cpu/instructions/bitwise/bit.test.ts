@@ -1,20 +1,18 @@
 import { CPU } from "../../../../../core/cpu";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("BIT instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("BIT zero page sets Z, N, V correctly, consumes 3 cycles", () => {
-    cpu.registers.A = 0b00110000;
-    cpu.memory.write(0x0010, 0b11000000); // N=1, V=1
+    cpu = createCPU(new FakeRom([Opcode.BIT_TEST_ZERO_PAGE, 0x10]));
 
-    cpu.loadProgram([Opcode.BIT_TEST_ZERO_PAGE, 0x10]);
+    cpu.registers.A = 0b00110000;
+    cpu.write(0x0010, 0b11000000); // N=1, V=1
+
     const initialCycles = cpu.cycles;
 
     cpu.step();
@@ -33,10 +31,10 @@ describe("BIT instruction integration tests", () => {
   });
 
   it("BIT zero page with non-zero AND clears Z", () => {
-    cpu.registers.A = 0b11110000;
-    cpu.memory.write(0x0010, 0b10000000);
+    cpu = createCPU(new FakeRom([Opcode.BIT_TEST_ZERO_PAGE, 0x10]));
 
-    cpu.loadProgram([Opcode.BIT_TEST_ZERO_PAGE, 0x10]);
+    cpu.registers.A = 0b11110000;
+    cpu.write(0x0010, 0b10000000);
 
     cpu.step();
 
@@ -46,10 +44,11 @@ describe("BIT instruction integration tests", () => {
   });
 
   it("BIT absolute sets flags correctly, consumes 4 cycles", () => {
-    cpu.registers.A = 0b00001111;
-    cpu.memory.write(0x2000, 0b01000000); // V=1
+    cpu = createCPU(new FakeRom([Opcode.BIT_TEST_ABSOLUTE, 0x00, 0x11]));
 
-    cpu.loadProgram([Opcode.BIT_TEST_ABSOLUTE, 0x00, 0x20]);
+    cpu.registers.A = 0b00001111;
+    cpu.write(0x1100, 0b01000000); // V=1
+
     const initialCycles = cpu.cycles;
 
     cpu.step();

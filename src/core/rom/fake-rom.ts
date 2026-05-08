@@ -4,7 +4,7 @@ const HEADER_SIZE = 16;
 const PRG_BANK_SIZE = 16 * 1024;
 
 export class FakeRom extends Rom {
-  constructor(program: number[], start = 0x8000) {
+  constructor(program: number[], start = 0x8000, irqVector?: number) {
     const prgBanks = 1; // 16KB
     const chrBanks = 0; // CHR RAM
 
@@ -31,6 +31,12 @@ export class FakeRom extends Rom {
     const resetVector = 0x3ffc;
     prgRom[resetVector] = start & 0xff;
     prgRom[resetVector + 1] = (start >> 8) & 0xff;
+
+    // IRQ/BRK vector (0xFFFE)
+    if (irqVector !== undefined) {
+      prgRom[0x3ffe] = irqVector & 0xff;
+      prgRom[0x3fff] = (irqVector >> 8) & 0xff;
+    }
 
     const raw = new Uint8Array([...header, ...prgRom]);
 

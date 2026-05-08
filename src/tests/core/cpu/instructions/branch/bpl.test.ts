@@ -1,20 +1,17 @@
 import { CPU } from "../../../../../core/cpu";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("BPL instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("BPL branches when negative flag is clear", () => {
-    cpu.registers.STATUS.setFlag(Flag.NEGATIVE, false);
-
     // offset +2
-    cpu.loadProgram([Opcode.BRANCH_IF_POSITIVE, 0x02]);
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_POSITIVE, 0x02]));
+
+    cpu.registers.STATUS.setFlag(Flag.NEGATIVE, false);
 
     const initialPC = cpu.registers.PC;
     const initialCycles = cpu.cycles;
@@ -26,9 +23,9 @@ describe("BPL instruction integration tests", () => {
   });
 
   it("BPL does not branch when negative flag is set", () => {
-    cpu.registers.STATUS.setFlag(Flag.NEGATIVE, true);
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_POSITIVE, 0x02]));
 
-    cpu.loadProgram([Opcode.BRANCH_IF_POSITIVE, 0x02]);
+    cpu.registers.STATUS.setFlag(Flag.NEGATIVE, true);
 
     const initialPC = cpu.registers.PC;
     const initialCycles = cpu.cycles;
@@ -40,10 +37,10 @@ describe("BPL instruction integration tests", () => {
   });
 
   it("BPL supports negative offset (backward branch)", () => {
-    cpu.registers.STATUS.setFlag(Flag.NEGATIVE, false);
-
     // -2 (0xFE signed)
-    cpu.loadProgram([Opcode.BRANCH_IF_POSITIVE, 0xfe]);
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_POSITIVE, 0xfe]));
+
+    cpu.registers.STATUS.setFlag(Flag.NEGATIVE, false);
 
     const initialPC = cpu.registers.PC;
 
@@ -53,11 +50,10 @@ describe("BPL instruction integration tests", () => {
   });
 
   it("BPL adds 1 extra cycle when branch crosses page", () => {
-    cpu.registers.STATUS.setFlag(Flag.NEGATIVE, false);
-
     // força page cross
-    cpu.loadProgram([Opcode.BRANCH_IF_POSITIVE, 0x02], 0x80fd);
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_POSITIVE, 0x02], 0x80fd));
 
+    cpu.registers.STATUS.setFlag(Flag.NEGATIVE, false);
     const initialCycles = cpu.cycles;
 
     cpu.step();
@@ -66,9 +62,9 @@ describe("BPL instruction integration tests", () => {
   });
 
   it("BPL does not add page cycle if branch not taken", () => {
-    cpu.registers.STATUS.setFlag(Flag.NEGATIVE, true);
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_POSITIVE, 0x02], 0x80fd));
 
-    cpu.loadProgram([Opcode.BRANCH_IF_POSITIVE, 0x02], 0x20fd);
+    cpu.registers.STATUS.setFlag(Flag.NEGATIVE, true);
 
     const initialCycles = cpu.cycles;
 
