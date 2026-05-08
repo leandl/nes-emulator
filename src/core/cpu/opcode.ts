@@ -245,7 +245,8 @@ export enum Opcode {
   //// System
   NO_OPERATION = 0xea,
 
-  //// NOP (ILEGAIS)
+  // Illegal
+  //// NOP (illegal)
   ////// Immediate
   NO_OPERATION_IMMEDIATE = 0x80,
 
@@ -526,8 +527,9 @@ export type FlagOpcode =
 
 export type OtherOpcode =
   // System
-  | Opcode.NO_OPERATION
+  Opcode.NO_OPERATION;
 
+export type IllegalOpcode =
   // NOP (ILEGAIS)
 
   //// Immediate

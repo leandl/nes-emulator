@@ -12,6 +12,7 @@ import { allCompareInstructions } from "./all-compare-instructions";
 import { allStackInstructions } from "./all-stack-instructions";
 import { allJumpInstructions } from "./all-jump-instructions";
 import { allBranchInstructions } from "./all-branch-instructions";
+import { allIllegalInstructions } from "./all-illegal-instructions";
 
 export const allInstructions: Record<Opcode, Instruction> = {
   // Access
@@ -46,4 +47,7 @@ export const allInstructions: Record<Opcode, Instruction> = {
 
   // Other
   ...allOtherInstructions,
+
+  // Illegal
+  ...allIllegalInstructions,
 };
