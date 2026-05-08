@@ -1,19 +1,17 @@
 import { CPU } from "../../../../../core/cpu";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("TAX instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("TAX transfers Accumulator to X, updates flags and consumes 2 cycles", () => {
     // Valor normal
-    cpu.registers.A = 0x42;
-    cpu.loadProgram([Opcode.TRANSFER_ACCUMULATOR_TO_X_REGISTER]);
+    cpu = createCPU(new FakeRom([Opcode.TRANSFER_ACCUMULATOR_TO_X_REGISTER]), {
+      A: 0x42,
+    });
 
     let initialCycles = cpu.cycles;
 
@@ -25,8 +23,9 @@ describe("TAX instruction integration tests", () => {
     expect(cpu.cycles - initialCycles).toBe(2);
 
     // Zero flag
-    cpu.registers.A = 0x00;
-    cpu.loadProgram([Opcode.TRANSFER_ACCUMULATOR_TO_X_REGISTER], 0x8001);
+    cpu = createCPU(new FakeRom([Opcode.TRANSFER_ACCUMULATOR_TO_X_REGISTER]), {
+      A: 0x00,
+    });
 
     initialCycles = cpu.cycles;
 
@@ -38,9 +37,9 @@ describe("TAX instruction integration tests", () => {
     expect(cpu.cycles - initialCycles).toBe(2);
 
     // Negative flag
-    cpu.registers.A = 0x80;
-    cpu.loadProgram([Opcode.TRANSFER_ACCUMULATOR_TO_X_REGISTER], 0x8002);
-
+    cpu = createCPU(new FakeRom([Opcode.TRANSFER_ACCUMULATOR_TO_X_REGISTER]), {
+      A: 0x80,
+    });
     initialCycles = cpu.cycles;
 
     cpu.step();

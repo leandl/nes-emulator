@@ -1,17 +1,14 @@
 import { CPU } from "../../../../../core/cpu";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("NOP instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("NOP does nothing except increment PC and consume 2 cycles", () => {
     const initialPC = 0x8000;
-    cpu.loadProgram([Opcode.NO_OPERATION], initialPC);
+    cpu = createCPU(new FakeRom([Opcode.NO_OPERATION], initialPC));
 
     const initialCycles = cpu.cycles;
 

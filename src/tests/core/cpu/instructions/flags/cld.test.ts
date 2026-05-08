@@ -1,16 +1,15 @@
-import { CPU } from "../../../../../core/cpu";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("CLD instruction", () => {
   it("clears decimal flag and consumes 2 cycles", () => {
-    const cpu = new CPU(allInstruction);
+    const cpu = createCPU(new FakeRom([Opcode.CLEAR_DECIMAL_FLAG]));
     const initialCycles = cpu.cycles;
 
     cpu.registers.STATUS.setFlag(Flag.DECIMAL, true);
 
-    cpu.loadProgram([Opcode.CLEAR_DECIMAL_FLAG]);
     cpu.step();
 
     expect(cpu.registers.STATUS.is(Flag.DECIMAL)).toBe(false);

@@ -13,7 +13,7 @@ import { allStackInstructions } from "./all-stack-instructions";
 import { allJumpInstructions } from "./all-jump-instructions";
 import { allBranchInstructions } from "./all-branch-instructions";
 
-export const allInstruction: Record<Opcode, Instruction> = {
+export const allInstructions: Record<Opcode, Instruction> = {
   // Access
   ...allAccessInstructions,
 

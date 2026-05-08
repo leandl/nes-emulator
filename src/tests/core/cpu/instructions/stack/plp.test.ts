@@ -1,22 +1,20 @@
 import { CPU } from "../../../../../core/cpu";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("PLP instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("PLP pulls status from stack, consumes 4 cycles", () => {
+    cpu = createCPU(new FakeRom([Opcode.STACK_PULL_PROCESSOR_STATUS]));
+
     cpu.registers.SP = 0xfe;
 
     const value = Flag.CARRY | Flag.ZERO;
-    cpu.memory.write(0x01ff, value);
+    cpu.write(0x01ff, value);
 
-    cpu.loadProgram([Opcode.STACK_PULL_PROCESSOR_STATUS]);
     const initialCycles = cpu.cycles;
 
     cpu.step();
@@ -29,12 +27,12 @@ describe("PLP instruction integration tests", () => {
   });
 
   it("PLP ignores BREAK flag from stack", () => {
+    cpu = createCPU(new FakeRom([Opcode.STACK_PULL_PROCESSOR_STATUS]));
+
     cpu.registers.SP = 0xfe;
 
     const value = Flag.BREAK;
-    cpu.memory.write(0x01ff, value);
-
-    cpu.loadProgram([Opcode.STACK_PULL_PROCESSOR_STATUS]);
+    cpu.write(0x01ff, value);
 
     cpu.step();
 
@@ -42,11 +40,11 @@ describe("PLP instruction integration tests", () => {
   });
 
   it("PLP forces UNUSED flag to 1", () => {
+    cpu = createCPU(new FakeRom([Opcode.STACK_PULL_PROCESSOR_STATUS]));
+
     cpu.registers.SP = 0xfe;
 
-    cpu.memory.write(0x01ff, 0x00);
-
-    cpu.loadProgram([Opcode.STACK_PULL_PROCESSOR_STATUS]);
+    cpu.write(0x01ff, 0x00);
 
     cpu.step();
 
@@ -54,14 +52,14 @@ describe("PLP instruction integration tests", () => {
   });
 
   it("PLP restores multiple flags correctly", () => {
+    cpu = createCPU(new FakeRom([Opcode.STACK_PULL_PROCESSOR_STATUS]));
+
     cpu.registers.SP = 0xfe;
 
     const value =
       Flag.CARRY | Flag.INTERRUPT_DISABLE | Flag.NEGATIVE | Flag.OVERFLOW;
 
-    cpu.memory.write(0x01ff, value);
-
-    cpu.loadProgram([Opcode.STACK_PULL_PROCESSOR_STATUS]);
+    cpu.write(0x01ff, value);
 
     cpu.step();
 
@@ -72,11 +70,11 @@ describe("PLP instruction integration tests", () => {
   });
 
   it("PLP uses correct stack address (SP increment before read)", () => {
+    cpu = createCPU(new FakeRom([Opcode.STACK_PULL_PROCESSOR_STATUS]));
+
     cpu.registers.SP = 0x80;
 
-    cpu.memory.write(0x0181, Flag.ZERO);
-
-    cpu.loadProgram([Opcode.STACK_PULL_PROCESSOR_STATUS]);
+    cpu.write(0x0181, Flag.ZERO);
 
     cpu.step();
 
@@ -85,12 +83,12 @@ describe("PLP instruction integration tests", () => {
   });
 
   it("PLP wraps stack pointer (overflow behavior)", () => {
+    cpu = createCPU(new FakeRom([Opcode.STACK_PULL_PROCESSOR_STATUS]));
+
     cpu.registers.SP = 0xff;
 
     // SP++ → 0x00 → 0x0100
-    cpu.memory.write(0x0100, Flag.CARRY);
-
-    cpu.loadProgram([Opcode.STACK_PULL_PROCESSOR_STATUS]);
+    cpu.write(0x0100, Flag.CARRY);
 
     cpu.step();
 

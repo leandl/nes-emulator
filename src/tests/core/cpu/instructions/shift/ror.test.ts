@@ -1,20 +1,18 @@
 import { CPU } from "../../../../../core/cpu";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("ROR instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("ROR accumulator shifts right through carry, consumes 2 cycles", () => {
+    cpu = createCPU(new FakeRom([Opcode.ROTATE_RIGHT_ACCUMULATOR]));
+
     cpu.registers.A = 0x02;
     cpu.registers.STATUS.setFlag(Flag.CARRY, false);
 
-    cpu.loadProgram([Opcode.ROTATE_RIGHT_ACCUMULATOR]);
     const initialCycles = cpu.cycles;
     cpu.step();
 
@@ -23,10 +21,11 @@ describe("ROR instruction integration tests", () => {
   });
 
   it("ROR accumulator with carry true rotates carry into bit 7", () => {
+    cpu = createCPU(new FakeRom([Opcode.ROTATE_RIGHT_ACCUMULATOR]));
+
     cpu.registers.A = 0x02; // 00000010
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
 
-    cpu.loadProgram([Opcode.ROTATE_RIGHT_ACCUMULATOR]);
     const initialCycles = cpu.cycles;
 
     cpu.step();
@@ -40,116 +39,128 @@ describe("ROR instruction integration tests", () => {
 
   it("ROR zero page shifts memory correctly, consumes 5 cycles", () => {
     const addr = 0x10;
-    cpu.memory.write(addr, 0x04);
+    cpu = createCPU(new FakeRom([Opcode.ROTATE_RIGHT_ZERO_PAGE, addr]));
+
+    cpu.write(addr, 0x04);
     cpu.registers.STATUS.setFlag(Flag.CARRY, false);
 
-    cpu.loadProgram([Opcode.ROTATE_RIGHT_ZERO_PAGE, addr]);
     const initialCycles = cpu.cycles;
     cpu.step();
 
-    expect(cpu.memory.read(addr)).toBe(0x02);
+    expect(cpu.read(addr)).toBe(0x02);
     expect(cpu.cycles - initialCycles).toBe(5);
   });
 
   it("ROR zero page with carry true rotates carry into memory", () => {
     const addr = 0x10;
-    cpu.memory.write(addr, 0x04); // 00000100
+
+    cpu = createCPU(new FakeRom([Opcode.ROTATE_RIGHT_ZERO_PAGE, addr]));
+
+    cpu.write(addr, 0x04); // 00000100
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
 
-    cpu.loadProgram([Opcode.ROTATE_RIGHT_ZERO_PAGE, addr]);
     const initialCycles = cpu.cycles;
 
     cpu.step();
 
-    expect(cpu.memory.read(addr)).toBe(0x82); // 10000010
+    expect(cpu.read(addr)).toBe(0x82); // 10000010
     expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(5);
   });
 
   it("ROR zero page,X uses X offset, consumes 6 cycles", () => {
     const base = 0x10;
+
+    cpu = createCPU(new FakeRom([Opcode.ROTATE_RIGHT_ZERO_PAGE_X, base]));
+
     cpu.registers.X = 0x05;
-    cpu.memory.write(base + 0x05, 0x06);
+    cpu.write(base + 0x05, 0x06);
     cpu.registers.STATUS.setFlag(Flag.CARRY, false);
 
-    cpu.loadProgram([Opcode.ROTATE_RIGHT_ZERO_PAGE_X, base]);
     const initialCycles = cpu.cycles;
     cpu.step();
 
-    expect(cpu.memory.read(base + 0x05)).toBe(0x03);
+    expect(cpu.read(base + 0x05)).toBe(0x03);
     expect(cpu.cycles - initialCycles).toBe(6);
   });
 
   it("ROR zero page,X with carry true rotates correctly", () => {
     const base = 0x10;
+
+    cpu = createCPU(new FakeRom([Opcode.ROTATE_RIGHT_ZERO_PAGE_X, base]));
+
     cpu.registers.X = 0x05;
-    cpu.memory.write(base + 0x05, 0x06); // 00000110
+    cpu.write(base + 0x05, 0x06); // 00000110
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
 
-    cpu.loadProgram([Opcode.ROTATE_RIGHT_ZERO_PAGE_X, base]);
     const initialCycles = cpu.cycles;
 
     cpu.step();
 
-    expect(cpu.memory.read(base + 0x05)).toBe(0x83); // 10000011
+    expect(cpu.read(base + 0x05)).toBe(0x83); // 10000011
     expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(6);
   });
 
   it("ROR absolute shifts memory correctly, consumes 6 cycles", () => {
     const addr = 0x1234;
-    cpu.memory.write(addr, 0x08);
+
+    cpu = createCPU(new FakeRom([Opcode.ROTATE_RIGHT_ABSOLUTE, 0x34, 0x12]));
+
+    cpu.write(addr, 0x08);
     cpu.registers.STATUS.setFlag(Flag.CARRY, false);
 
-    cpu.loadProgram([Opcode.ROTATE_RIGHT_ABSOLUTE, 0x34, 0x12]);
     const initialCycles = cpu.cycles;
     cpu.step();
 
-    expect(cpu.memory.read(addr)).toBe(0x04);
+    expect(cpu.read(addr)).toBe(0x04);
     expect(cpu.cycles - initialCycles).toBe(6);
   });
 
   it("ROR absolute with carry true rotates correctly", () => {
+    cpu = createCPU(new FakeRom([Opcode.ROTATE_RIGHT_ABSOLUTE, 0x34, 0x12]));
+
     const addr = 0x1234;
-    cpu.memory.write(addr, 0x08); // 00001000
+    cpu.write(addr, 0x08); // 00001000
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
 
-    cpu.loadProgram([Opcode.ROTATE_RIGHT_ABSOLUTE, 0x34, 0x12]);
     const initialCycles = cpu.cycles;
 
     cpu.step();
 
-    expect(cpu.memory.read(addr)).toBe(0x84); // 10000100
+    expect(cpu.read(addr)).toBe(0x84); // 10000100
     expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(6);
   });
 
   it("ROR absolute,X uses X offset, consumes 7 cycles", () => {
-    const base = 0x2000;
+    cpu = createCPU(new FakeRom([Opcode.ROTATE_RIGHT_ABSOLUTE_X, 0x00, 0x10]));
+
+    const base = 0x1000;
     cpu.registers.X = 0x02;
-    cpu.memory.write(base + 0x02, 0x08);
+    cpu.write(base + 0x02, 0x08);
     cpu.registers.STATUS.setFlag(Flag.CARRY, false);
 
-    cpu.loadProgram([Opcode.ROTATE_RIGHT_ABSOLUTE_X, 0x00, 0x20]);
     const initialCycles = cpu.cycles;
     cpu.step();
 
-    expect(cpu.memory.read(base + 0x02)).toBe(0x04);
+    expect(cpu.read(base + 0x02)).toBe(0x04);
     expect(cpu.cycles - initialCycles).toBe(7);
   });
 
   it("ROR absolute,X with carry true rotates correctly", () => {
-    const base = 0x2000;
+    cpu = createCPU(new FakeRom([Opcode.ROTATE_RIGHT_ABSOLUTE_X, 0x00, 0x10]));
+
+    const base = 0x1000;
     cpu.registers.X = 0x02;
-    cpu.memory.write(base + 0x02, 0x08); // 00001000
+    cpu.write(base + 0x02, 0x08); // 00001000
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
 
-    cpu.loadProgram([Opcode.ROTATE_RIGHT_ABSOLUTE_X, 0x00, 0x20]);
     const initialCycles = cpu.cycles;
 
     cpu.step();
 
-    expect(cpu.memory.read(base + 0x02)).toBe(0x84); // 10000100
+    expect(cpu.read(base + 0x02)).toBe(0x84); // 10000100
     expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(7);
   });

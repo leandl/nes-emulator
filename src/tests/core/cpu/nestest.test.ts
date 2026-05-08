@@ -2,13 +2,8 @@ import fs from "fs";
 import path from "path";
 import readline from "readline";
 import { Rom } from "../../../core/rom";
-import { allInstruction } from "../../../core/cpu/factories/instructions/all-instructions";
-import { Cartridge } from "../../../core/cartridge";
-import { PPU } from "../../../core/ppu";
-import { Bus } from "../../../core/bus";
-import { CPU } from "../../../core/cpu";
 import { CPURegister } from "../../../core/cpu/registers";
-// import { Cpu } from "../../../core/cpu"; // futuramente
+import { createCPU } from "../../../core/cpu/factories/create-cpu";
 
 const romPath = path.resolve(__dirname, "nestest.nes");
 const logPath = path.resolve(__dirname, "nestest.log");
@@ -73,11 +68,7 @@ describe("NESTest", () => {
   it("should match CPU execution with nestest log", async () => {
     const rl = createLineReader(logPath);
 
-    const cartridge = new Cartridge(rom);
-    const ppu = new PPU(cartridge);
-    const bus = new Bus(cartridge, ppu);
-
-    const cpu = new CPU(bus, allInstruction);
+    const cpu = createCPU(rom);
 
     cpu.cycles = 7;
     cpu.registers[CPURegister.PROGRAM_COUNTER] = 0xc000;
