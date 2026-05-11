@@ -98,7 +98,7 @@ describe("NESTest", () => {
         expect(actual.p).toBe(expected.p);
         expect(cpu.cycles).toBe(expected.cycles);
 
-        if (lineNumber === 5700) {
+        if (lineNumber === 6300) {
           break;
         }
 

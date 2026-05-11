@@ -5,6 +5,8 @@ import { Addressing } from "../../addressing";
 import { LoadInstruction } from "../../instructions/load-instruction";
 import { CPURegister } from "../../registers";
 import { StoreInstruction } from "../../instructions/store-instruction";
+import { SubtractWithCarryInstruction } from "../../instructions/subtract-with-carry-instruction";
+import { DecrementAndCompareInstruction } from "../../instructions/decrement-and-compare-instruction";
 
 export const allIllegalInstructions: Record<IllegalOpcode, Instruction> = {
   // NOP (ILEGAIS)
@@ -128,7 +130,7 @@ export const allIllegalInstructions: Record<IllegalOpcode, Instruction> = {
     extraCycleOnPageCross: true,
   }),
 
-  //// Store Accumulator
+  // Store Accumulator
   [Opcode.STORE_ACCUMULATOR_AND_X_REGISTER_ZERO_PAGE]: new StoreInstruction({
     register: [CPURegister.ACCUMULATOR, CPURegister.X],
     getAddress: Addressing.zeroPage,
@@ -149,4 +151,54 @@ export const allIllegalInstructions: Record<IllegalOpcode, Instruction> = {
     getAddress: Addressing.indirectX,
     baseCycles: 6,
   }),
+
+  // Subtract with Carry
+  [Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE_EB]: new SubtractWithCarryInstruction({
+    getAddress: Addressing.immediate,
+    baseCycles: 2,
+  }),
+
+  // Decrement Memory then Compare Accumulator (DCP - illegal opcode)
+  [Opcode.DECREMENT_AND_COMPARE_ACCUMULATOR_ZERO_PAGE]:
+    new DecrementAndCompareInstruction({
+      register: CPURegister.ACCUMULATOR,
+      getAddress: Addressing.zeroPage,
+      baseCycles: 5,
+    }),
+  [Opcode.DECREMENT_AND_COMPARE_ACCUMULATOR_ZERO_PAGE_X]:
+    new DecrementAndCompareInstruction({
+      register: CPURegister.ACCUMULATOR,
+      getAddress: Addressing.zeroPageX,
+      baseCycles: 6,
+    }),
+  [Opcode.DECREMENT_AND_COMPARE_ACCUMULATOR_ABSOLUTE]:
+    new DecrementAndCompareInstruction({
+      register: CPURegister.ACCUMULATOR,
+      getAddress: Addressing.absolute,
+      baseCycles: 6,
+    }),
+  [Opcode.DECREMENT_AND_COMPARE_ACCUMULATOR_ABSOLUTE_X]:
+    new DecrementAndCompareInstruction({
+      register: CPURegister.ACCUMULATOR,
+      getAddress: Addressing.absoluteX,
+      baseCycles: 7,
+    }),
+  [Opcode.DECREMENT_AND_COMPARE_ACCUMULATOR_ABSOLUTE_Y]:
+    new DecrementAndCompareInstruction({
+      register: CPURegister.ACCUMULATOR,
+      getAddress: Addressing.absoluteY,
+      baseCycles: 7,
+    }),
+  [Opcode.DECREMENT_AND_COMPARE_ACCUMULATOR_INDIRECT_X]:
+    new DecrementAndCompareInstruction({
+      register: CPURegister.ACCUMULATOR,
+      getAddress: Addressing.indirectX,
+      baseCycles: 8,
+    }),
+  [Opcode.DECREMENT_AND_COMPARE_ACCUMULATOR_INDIRECT_Y]:
+    new DecrementAndCompareInstruction({
+      register: CPURegister.ACCUMULATOR,
+      getAddress: Addressing.indirectY,
+      baseCycles: 8,
+    }),
 };
