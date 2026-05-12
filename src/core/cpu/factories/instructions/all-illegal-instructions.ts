@@ -7,6 +7,8 @@ import { CPURegister } from "../../registers";
 import { StoreInstruction } from "../../instructions/store-instruction";
 import { SubtractWithCarryInstruction } from "../../instructions/subtract-with-carry-instruction";
 import { DecrementAndCompareInstruction } from "../../instructions/decrement-and-compare-instruction";
+import { IncrementAndSubtractWithCarryInstruction } from "../../instructions/increment-and-subtract-with-carry-instruction";
+import { ShiftLeftAndOrInstruction } from "../../instructions/shift-left-and-or-instruction";
 
 export const allIllegalInstructions: Record<IllegalOpcode, Instruction> = {
   // NOP (ILEGAIS)
@@ -198,6 +200,80 @@ export const allIllegalInstructions: Record<IllegalOpcode, Instruction> = {
   [Opcode.DECREMENT_AND_COMPARE_ACCUMULATOR_INDIRECT_Y]:
     new DecrementAndCompareInstruction({
       register: CPURegister.ACCUMULATOR,
+      getAddress: Addressing.indirectY,
+      baseCycles: 8,
+    }),
+
+  // Increment Memory then Subtract with Carry (ISC - illegal opcode)
+  [Opcode.INCREMENT_AND_SUBTRACT_WITH_CARRY_ZERO_PAGE]:
+    new IncrementAndSubtractWithCarryInstruction({
+      getAddress: Addressing.zeroPage,
+      baseCycles: 5,
+    }),
+  [Opcode.INCREMENT_AND_SUBTRACT_WITH_CARRY_ZERO_PAGE_X]:
+    new IncrementAndSubtractWithCarryInstruction({
+      getAddress: Addressing.zeroPageX,
+      baseCycles: 6,
+    }),
+  [Opcode.INCREMENT_AND_SUBTRACT_WITH_CARRY_ABSOLUTE]:
+    new IncrementAndSubtractWithCarryInstruction({
+      getAddress: Addressing.absolute,
+      baseCycles: 6,
+    }),
+  [Opcode.INCREMENT_AND_SUBTRACT_WITH_CARRY_ABSOLUTE_X]:
+    new IncrementAndSubtractWithCarryInstruction({
+      getAddress: Addressing.absoluteX,
+      baseCycles: 7,
+    }),
+  [Opcode.INCREMENT_AND_SUBTRACT_WITH_CARRY_ABSOLUTE_Y]:
+    new IncrementAndSubtractWithCarryInstruction({
+      getAddress: Addressing.absoluteY,
+      baseCycles: 7,
+    }),
+  [Opcode.INCREMENT_AND_SUBTRACT_WITH_CARRY_INDIRECT_X]:
+    new IncrementAndSubtractWithCarryInstruction({
+      getAddress: Addressing.indirectX,
+      baseCycles: 8,
+    }),
+  [Opcode.INCREMENT_AND_SUBTRACT_WITH_CARRY_INDIRECT_Y]:
+    new IncrementAndSubtractWithCarryInstruction({
+      getAddress: Addressing.indirectY,
+      baseCycles: 8,
+    }),
+
+  // Shift Left then OR with Accumulator (SLO - illegal opcode)
+  [Opcode.SHIFT_LEFT_AND_OR_WITH_ACCUMULATOR_ZERO_PAGE]:
+    new ShiftLeftAndOrInstruction({
+      getAddress: Addressing.zeroPage,
+      baseCycles: 5,
+    }),
+  [Opcode.SHIFT_LEFT_AND_OR_WITH_ACCUMULATOR_ZERO_PAGE_X]:
+    new ShiftLeftAndOrInstruction({
+      getAddress: Addressing.zeroPageX,
+      baseCycles: 6,
+    }),
+  [Opcode.SHIFT_LEFT_AND_OR_WITH_ACCUMULATOR_ABSOLUTE]:
+    new ShiftLeftAndOrInstruction({
+      getAddress: Addressing.absolute,
+      baseCycles: 6,
+    }),
+  [Opcode.SHIFT_LEFT_AND_OR_WITH_ACCUMULATOR_ABSOLUTE_X]:
+    new ShiftLeftAndOrInstruction({
+      getAddress: Addressing.absoluteX,
+      baseCycles: 7,
+    }),
+  [Opcode.SHIFT_LEFT_AND_OR_WITH_ACCUMULATOR_ABSOLUTE_Y]:
+    new ShiftLeftAndOrInstruction({
+      getAddress: Addressing.absoluteY,
+      baseCycles: 7,
+    }),
+  [Opcode.SHIFT_LEFT_AND_OR_WITH_ACCUMULATOR_INDIRECT_X]:
+    new ShiftLeftAndOrInstruction({
+      getAddress: Addressing.indirectX,
+      baseCycles: 8,
+    }),
+  [Opcode.SHIFT_LEFT_AND_OR_WITH_ACCUMULATOR_INDIRECT_Y]:
+    new ShiftLeftAndOrInstruction({
       getAddress: Addressing.indirectY,
       baseCycles: 8,
     }),
