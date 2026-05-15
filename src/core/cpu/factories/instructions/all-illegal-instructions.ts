@@ -8,7 +8,10 @@ import { StoreInstruction } from "../../instructions/store-instruction";
 import { SubtractWithCarryInstruction } from "../../instructions/subtract-with-carry-instruction";
 import { DecrementAndCompareInstruction } from "../../instructions/decrement-and-compare-instruction";
 import { IncrementAndSubtractWithCarryInstruction } from "../../instructions/increment-and-subtract-with-carry-instruction";
-import { ShiftLeftAndOrInstruction } from "../../instructions/shift-left-and-or-instruction";
+import { ShiftLeftAndOrWithAccumulatorInstruction } from "../../instructions/shift-left-and-or-with-accumulator-instruction";
+import { RotateLeftAndAndWithAccumulatorInstruction } from "../../instructions/rotate-left-and-and-with-accumulator-instruction";
+import { ShiftRightAndXorWithAccumulatorInstruction } from "../../instructions/shift-right-and-xor-with-accumulator-nstruction";
+import { RotateRightAndAddWithAccumulatorInstruction } from "../../instructions/rotate-right-and-add-with-accumulator-instruction copy";
 
 export const allIllegalInstructions: Record<IllegalOpcode, Instruction> = {
   // NOP (ILEGAIS)
@@ -243,37 +246,148 @@ export const allIllegalInstructions: Record<IllegalOpcode, Instruction> = {
 
   // Shift Left then OR with Accumulator (SLO - illegal opcode)
   [Opcode.SHIFT_LEFT_AND_OR_WITH_ACCUMULATOR_ZERO_PAGE]:
-    new ShiftLeftAndOrInstruction({
+    new ShiftLeftAndOrWithAccumulatorInstruction({
       getAddress: Addressing.zeroPage,
       baseCycles: 5,
     }),
   [Opcode.SHIFT_LEFT_AND_OR_WITH_ACCUMULATOR_ZERO_PAGE_X]:
-    new ShiftLeftAndOrInstruction({
+    new ShiftLeftAndOrWithAccumulatorInstruction({
       getAddress: Addressing.zeroPageX,
       baseCycles: 6,
     }),
   [Opcode.SHIFT_LEFT_AND_OR_WITH_ACCUMULATOR_ABSOLUTE]:
-    new ShiftLeftAndOrInstruction({
+    new ShiftLeftAndOrWithAccumulatorInstruction({
       getAddress: Addressing.absolute,
       baseCycles: 6,
     }),
   [Opcode.SHIFT_LEFT_AND_OR_WITH_ACCUMULATOR_ABSOLUTE_X]:
-    new ShiftLeftAndOrInstruction({
+    new ShiftLeftAndOrWithAccumulatorInstruction({
       getAddress: Addressing.absoluteX,
       baseCycles: 7,
     }),
   [Opcode.SHIFT_LEFT_AND_OR_WITH_ACCUMULATOR_ABSOLUTE_Y]:
-    new ShiftLeftAndOrInstruction({
+    new ShiftLeftAndOrWithAccumulatorInstruction({
       getAddress: Addressing.absoluteY,
       baseCycles: 7,
     }),
   [Opcode.SHIFT_LEFT_AND_OR_WITH_ACCUMULATOR_INDIRECT_X]:
-    new ShiftLeftAndOrInstruction({
+    new ShiftLeftAndOrWithAccumulatorInstruction({
       getAddress: Addressing.indirectX,
       baseCycles: 8,
     }),
   [Opcode.SHIFT_LEFT_AND_OR_WITH_ACCUMULATOR_INDIRECT_Y]:
-    new ShiftLeftAndOrInstruction({
+    new ShiftLeftAndOrWithAccumulatorInstruction({
+      getAddress: Addressing.indirectY,
+      baseCycles: 8,
+    }),
+
+  // Rotate Left then AND with Accumulator (RLA - illegal opcode)
+  [Opcode.ROTATE_LEFT_AND_AND_WITH_ACCUMULATOR_ZERO_PAGE]:
+    new RotateLeftAndAndWithAccumulatorInstruction({
+      getAddress: Addressing.zeroPage,
+      baseCycles: 5,
+    }),
+  [Opcode.ROTATE_LEFT_AND_AND_WITH_ACCUMULATOR_ZERO_PAGE_X]:
+    new RotateLeftAndAndWithAccumulatorInstruction({
+      getAddress: Addressing.zeroPageX,
+      baseCycles: 6,
+    }),
+  [Opcode.ROTATE_LEFT_AND_AND_WITH_ACCUMULATOR_ABSOLUTE]:
+    new RotateLeftAndAndWithAccumulatorInstruction({
+      getAddress: Addressing.absolute,
+      baseCycles: 6,
+    }),
+  [Opcode.ROTATE_LEFT_AND_AND_WITH_ACCUMULATOR_ABSOLUTE_X]:
+    new RotateLeftAndAndWithAccumulatorInstruction({
+      getAddress: Addressing.absoluteX,
+      baseCycles: 7,
+    }),
+  [Opcode.ROTATE_LEFT_AND_AND_WITH_ACCUMULATOR_ABSOLUTE_Y]:
+    new RotateLeftAndAndWithAccumulatorInstruction({
+      getAddress: Addressing.absoluteY,
+      baseCycles: 7,
+    }),
+  [Opcode.ROTATE_LEFT_AND_AND_WITH_ACCUMULATOR_INDIRECT_X]:
+    new RotateLeftAndAndWithAccumulatorInstruction({
+      getAddress: Addressing.indirectX,
+      baseCycles: 8,
+    }),
+  [Opcode.ROTATE_LEFT_AND_AND_WITH_ACCUMULATOR_INDIRECT_Y]:
+    new RotateLeftAndAndWithAccumulatorInstruction({
+      getAddress: Addressing.indirectY,
+      baseCycles: 8,
+    }),
+
+  // Shift Right then XOR with Accumulator (SRE - illegal opcode)
+  [Opcode.SHIFT_RIGHT_AND_XOR_WITH_ACCUMULATOR_ZERO_PAGE]:
+    new ShiftRightAndXorWithAccumulatorInstruction({
+      getAddress: Addressing.zeroPage,
+      baseCycles: 5,
+    }),
+  [Opcode.SHIFT_RIGHT_AND_XOR_WITH_ACCUMULATOR_ZERO_PAGE_X]:
+    new ShiftRightAndXorWithAccumulatorInstruction({
+      getAddress: Addressing.zeroPageX,
+      baseCycles: 6,
+    }),
+  [Opcode.SHIFT_RIGHT_AND_XOR_WITH_ACCUMULATOR_ABSOLUTE]:
+    new ShiftRightAndXorWithAccumulatorInstruction({
+      getAddress: Addressing.absolute,
+      baseCycles: 6,
+    }),
+  [Opcode.SHIFT_RIGHT_AND_XOR_WITH_ACCUMULATOR_ABSOLUTE_X]:
+    new ShiftRightAndXorWithAccumulatorInstruction({
+      getAddress: Addressing.absoluteX,
+      baseCycles: 7,
+    }),
+  [Opcode.SHIFT_RIGHT_AND_XOR_WITH_ACCUMULATOR_ABSOLUTE_Y]:
+    new ShiftRightAndXorWithAccumulatorInstruction({
+      getAddress: Addressing.absoluteY,
+      baseCycles: 7,
+    }),
+  [Opcode.SHIFT_RIGHT_AND_XOR_WITH_ACCUMULATOR_INDIRECT_X]:
+    new ShiftRightAndXorWithAccumulatorInstruction({
+      getAddress: Addressing.indirectX,
+      baseCycles: 8,
+    }),
+  [Opcode.SHIFT_RIGHT_AND_XOR_WITH_ACCUMULATOR_INDIRECT_Y]:
+    new ShiftRightAndXorWithAccumulatorInstruction({
+      getAddress: Addressing.indirectY,
+      baseCycles: 8,
+    }),
+
+  // Rotate Right then Add with Accumulator (RRA - illegal opcode)
+  [Opcode.ROTATE_RIGHT_AND_ADD_WITH_ACCUMULATOR_ZERO_PAGE]:
+    new RotateRightAndAddWithAccumulatorInstruction({
+      getAddress: Addressing.zeroPage,
+      baseCycles: 5,
+    }),
+  [Opcode.ROTATE_RIGHT_AND_ADD_WITH_ACCUMULATOR_ZERO_PAGE_X]:
+    new RotateRightAndAddWithAccumulatorInstruction({
+      getAddress: Addressing.zeroPageX,
+      baseCycles: 6,
+    }),
+  [Opcode.ROTATE_RIGHT_AND_ADD_WITH_ACCUMULATOR_ABSOLUTE]:
+    new RotateRightAndAddWithAccumulatorInstruction({
+      getAddress: Addressing.absolute,
+      baseCycles: 6,
+    }),
+  [Opcode.ROTATE_RIGHT_AND_ADD_WITH_ACCUMULATOR_ABSOLUTE_X]:
+    new RotateRightAndAddWithAccumulatorInstruction({
+      getAddress: Addressing.absoluteX,
+      baseCycles: 7,
+    }),
+  [Opcode.ROTATE_RIGHT_AND_ADD_WITH_ACCUMULATOR_ABSOLUTE_Y]:
+    new RotateRightAndAddWithAccumulatorInstruction({
+      getAddress: Addressing.absoluteY,
+      baseCycles: 7,
+    }),
+  [Opcode.ROTATE_RIGHT_AND_ADD_WITH_ACCUMULATOR_INDIRECT_X]:
+    new RotateRightAndAddWithAccumulatorInstruction({
+      getAddress: Addressing.indirectX,
+      baseCycles: 8,
+    }),
+  [Opcode.ROTATE_RIGHT_AND_ADD_WITH_ACCUMULATOR_INDIRECT_Y]:
+    new RotateRightAndAddWithAccumulatorInstruction({
       getAddress: Addressing.indirectY,
       baseCycles: 8,
     }),

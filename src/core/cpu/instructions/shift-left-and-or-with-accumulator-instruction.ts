@@ -3,13 +3,13 @@ import type { AddressResolver } from "../addressing";
 import { Flag } from "../flag";
 import type { Instruction } from "./instruction";
 
-type ShiftLeftAndOrInstructionConfig = {
+type ShiftLeftAndOrWithAccumulatorInstructionConfig = {
   getAddress: AddressResolver;
   baseCycles: number;
 };
 
-export class ShiftLeftAndOrInstruction implements Instruction {
-  constructor(private config: ShiftLeftAndOrInstructionConfig) {}
+export class ShiftLeftAndOrWithAccumulatorInstruction implements Instruction {
+  constructor(private config: ShiftLeftAndOrWithAccumulatorInstructionConfig) {}
 
   execute(cpu: CPU) {
     const { address } = this.config.getAddress(cpu);

@@ -89,35 +89,15 @@ describe("NESTest", () => {
         p: cpu.registers.STATUS.raw,
       };
 
-      try {
-        expect(actual.pc).toBe(expected.pc);
-        expect(actual.a).toBe(expected.a);
-        expect(actual.x).toBe(expected.x);
-        expect(actual.y).toBe(expected.y);
-        expect(actual.sp).toBe(expected.sp);
-        expect(actual.p).toBe(expected.p);
-        expect(cpu.cycles).toBe(expected.cycles);
+      expect(actual.pc).toBe(expected.pc);
+      expect(actual.a).toBe(expected.a);
+      expect(actual.x).toBe(expected.x);
+      expect(actual.y).toBe(expected.y);
+      expect(actual.sp).toBe(expected.sp);
+      expect(actual.p).toBe(expected.p);
+      expect(cpu.cycles).toBe(expected.cycles);
 
-        if (lineNumber === 7400) {
-          break;
-        }
-
-        cpu.step();
-      } catch (err) {
-        const opcode = cpu.read(actual.pc);
-
-        console.error(
-          `❌ NESTEST MISMATCH | ` +
-            `line=${lineNumber} | ` +
-            `pc=0x${actual.pc.toString(16).padStart(4, "0")} | ` +
-            `opcode=0x${opcode.toString(16).padStart(2, "0")} | ` +
-            `cycles=${cpu.cycles} expectedCycles=${expected.cycles} | ` +
-            `expected={pc:0x${expected.pc.toString(16)},A:${expected.a.toString(16)},X:${expected.x.toString(16)},Y:${expected.y.toString(16)},SP:${expected.sp.toString(16)},P:${expected.p.toString(16)}} | ` +
-            `actual={pc:0x${actual.pc.toString(16)},A:${actual.a.toString(16)},X:${actual.x.toString(16)},Y:${actual.y.toString(16)},SP:${actual.sp.toString(16)},P:${actual.p.toString(16)}} | ` +
-            `log="${line.trim()}"`,
-        );
-        throw err;
-      }
+      cpu.step();
     }
   });
 });
