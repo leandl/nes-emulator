@@ -1,0 +1,50 @@
+import { CPU } from "../../../../../src/core/cpu";
+import { createCPU } from "../../../../../src/core/cpu/factories/create-cpu";
+import { Flag } from "../../../../../src/core/cpu/flag";
+import { Opcode } from "../../../../../src/core/cpu/opcode";
+import { FakeRom } from "../../../../../src/core/rom/fake-rom";
+
+describe("DEY instruction integration tests", () => {
+  let cpu: CPU;
+
+  it("DEY decrements Y and updates flags, consumes 2 cycles", () => {
+    // Valor normal
+    cpu = createCPU(new FakeRom([Opcode.DECREMENT_Y_REGISTER]));
+
+    cpu.registers.Y = 0x10;
+
+    let initialCycles = cpu.cycles;
+    cpu.step();
+
+    expect(cpu.registers.Y).toBe(0x0f);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.cycles - initialCycles).toBe(2);
+
+    // Zero flag
+    cpu = createCPU(new FakeRom([Opcode.DECREMENT_Y_REGISTER], 0x8001));
+
+    cpu.registers.Y = 0x01;
+
+    initialCycles = cpu.cycles;
+    cpu.step();
+
+    expect(cpu.registers.Y).toBe(0x00);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
+    expect(cpu.cycles - initialCycles).toBe(2);
+
+    // Negative flag (underflow)
+    cpu = createCPU(new FakeRom([Opcode.DECREMENT_Y_REGISTER], 0x8002));
+
+    cpu.registers.Y = 0x00;
+
+    initialCycles = cpu.cycles;
+    cpu.step();
+
+    expect(cpu.registers.Y).toBe(0xff);
+    expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);
+    expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true);
+    expect(cpu.cycles - initialCycles).toBe(2);
+  });
+});
