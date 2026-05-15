@@ -1,22 +1,19 @@
 import { CPU } from "../../../../../core/cpu";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("PLA instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("PLA pulls value from stack into A, updates flags, consumes 4 cycles", () => {
+    cpu = createCPU(new FakeRom([Opcode.STACK_PULL_ACCUMULATOR]));
+
     cpu.registers.SP = 0xfe;
-
     // valor na stack (SP + 1 = 0xff → 0x01ff)
-    cpu.memory.write(0x01ff, 0x42);
+    cpu.write(0x01ff, 0x42);
 
-    cpu.loadProgram([Opcode.STACK_PULL_ACCUMULATOR]);
     const initialCycles = cpu.cycles;
 
     cpu.step();
@@ -30,10 +27,10 @@ describe("PLA instruction integration tests", () => {
   });
 
   it("PLA sets ZERO flag when result is 0", () => {
-    cpu.registers.SP = 0xfe;
-    cpu.memory.write(0x01ff, 0x00);
+    cpu = createCPU(new FakeRom([Opcode.STACK_PULL_ACCUMULATOR]));
 
-    cpu.loadProgram([Opcode.STACK_PULL_ACCUMULATOR]);
+    cpu.registers.SP = 0xfe;
+    cpu.write(0x01ff, 0x00);
 
     cpu.step();
 
@@ -43,10 +40,10 @@ describe("PLA instruction integration tests", () => {
   });
 
   it("PLA sets NEGATIVE flag when bit 7 is set", () => {
-    cpu.registers.SP = 0xfe;
-    cpu.memory.write(0x01ff, 0x80);
+    cpu = createCPU(new FakeRom([Opcode.STACK_PULL_ACCUMULATOR]));
 
-    cpu.loadProgram([Opcode.STACK_PULL_ACCUMULATOR]);
+    cpu.registers.SP = 0xfe;
+    cpu.write(0x01ff, 0x80);
 
     cpu.step();
 
@@ -56,11 +53,11 @@ describe("PLA instruction integration tests", () => {
   });
 
   it("PLA uses correct stack address (SP increment before read)", () => {
+    cpu = createCPU(new FakeRom([Opcode.STACK_PULL_ACCUMULATOR]));
+
     cpu.registers.SP = 0x80;
 
-    cpu.memory.write(0x0181, 0x99);
-
-    cpu.loadProgram([Opcode.STACK_PULL_ACCUMULATOR]);
+    cpu.write(0x0181, 0x99);
 
     cpu.step();
 
@@ -69,12 +66,12 @@ describe("PLA instruction integration tests", () => {
   });
 
   it("PLA wraps stack pointer (overflow behavior)", () => {
+    cpu = createCPU(new FakeRom([Opcode.STACK_PULL_ACCUMULATOR]));
+
     cpu.registers.SP = 0xff;
 
     // SP++ → 0x00 → endereço 0x0100
-    cpu.memory.write(0x0100, 0x55);
-
-    cpu.loadProgram([Opcode.STACK_PULL_ACCUMULATOR]);
+    cpu.write(0x0100, 0x55);
 
     cpu.step();
 

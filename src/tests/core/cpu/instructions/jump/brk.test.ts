@@ -1,31 +1,22 @@
 import { CPU } from "../../../../../core/cpu";
 import { CPUStatus } from "../../../../../core/cpu/cpu-status";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
 import { Opcode } from "../../../../../core/cpu/opcode";
 import { Stack } from "../../../../../core/cpu/stack";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("BRK instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
-  function setIRQVector(cpu: CPU, address: number) {
-    cpu.memory.write(0xfffe, address & 0xff); // low
-    cpu.memory.write(0xffff, (address >> 8) & 0xff); // high
-  }
-
   it("BRK pushes PC+2 and jumps to IRQ vector, consumes 7 cycles", () => {
-    setIRQVector(cpu, 0x9000);
-
-    cpu.loadProgram([Opcode.BREAK]);
+    cpu = createCPU(new FakeRom([Opcode.BREAK], 0x8000, 0x9000));
 
     const initialSP = cpu.registers.SP;
     const initialCycles = cpu.cycles;
 
     cpu.step();
+    console.log(cpu.registers.PC.toString(16));
 
     // verifica jump
     expect(cpu.registers.PC).toBe(0x9000);
@@ -53,9 +44,9 @@ describe("BRK instruction integration tests", () => {
   });
 
   it("BRK sets interrupt disable flag", () => {
-    setIRQVector(cpu, 0x9000);
+    cpu = createCPU(new FakeRom([Opcode.BREAK]));
 
-    cpu.loadProgram([Opcode.BREAK]);
+    cpu = createCPU(new FakeRom([Opcode.BREAK], 0x8000, 0x9000));
 
     cpu.step();
 
@@ -63,9 +54,9 @@ describe("BRK instruction integration tests", () => {
   });
 
   it("BRK pushes flags with BREAK and UNUSED set", () => {
-    setIRQVector(cpu, 0x9000);
+    cpu = createCPU(new FakeRom([Opcode.BREAK]));
 
-    cpu.loadProgram([Opcode.BREAK]);
+    cpu = createCPU(new FakeRom([Opcode.BREAK], 0x8000, 0x9000));
 
     cpu.step();
 
@@ -77,9 +68,9 @@ describe("BRK instruction integration tests", () => {
   });
 
   it("BRK pushes PC high then low (stack order correctness)", () => {
-    setIRQVector(cpu, 0x9000);
+    cpu = createCPU(new FakeRom([Opcode.BREAK]));
 
-    cpu.loadProgram([Opcode.BREAK]);
+    cpu = createCPU(new FakeRom([Opcode.BREAK], 0x8000, 0x9000));
 
     cpu.step();
 
@@ -92,12 +83,15 @@ describe("BRK instruction integration tests", () => {
   });
 
   it("BRK integrates correctly with RTI (round trip)", () => {
-    setIRQVector(cpu, 0x9000);
+    const program = new Array(0x1000).fill(0x00); // espaço até 0x9000
 
     // 0x8000: BRK
     // 0x9000: RTI
-    cpu.loadProgram([Opcode.BREAK], 0x8000);
-    cpu.memory.write(0x9000, Opcode.RETURN_FROM_INTERRUPT);
+    program[0x0000] = Opcode.BREAK; // 0x8000
+    program[0x1000 - 1] = 0x00; // padding opcional
+    program[0x1000] = Opcode.RETURN_FROM_INTERRUPT; // 0x9000
+
+    cpu = createCPU(new FakeRom(program, 0x8000, 0x9000));
 
     const initialSP = cpu.registers.SP;
 

@@ -1,15 +1,13 @@
-import { CPU } from "../../../../../core/cpu";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("CLC instruction", () => {
   it("clears carry flag and consumes 2 cycles", () => {
-    const cpu = new CPU(allInstruction);
+    const cpu = createCPU(new FakeRom([Opcode.CLEAR_CARRY_FLAG]));
 
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.CLEAR_CARRY_FLAG]);
 
     const initialCycles = cpu.cycles;
 

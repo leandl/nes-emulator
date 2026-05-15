@@ -1,20 +1,17 @@
 import { CPU } from "../../../../../core/cpu";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("BCS instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("BCS branches when carry is set", () => {
-    cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
     // offset +2
-    cpu.loadProgram([Opcode.BRANCH_IF_CARRY_SET, 0x02]);
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_CARRY_SET, 0x02]));
+
+    cpu.registers.STATUS.setFlag(Flag.CARRY, true);
 
     const initialPC = cpu.registers.PC;
     const initialCycles = cpu.cycles;
@@ -26,9 +23,9 @@ describe("BCS instruction integration tests", () => {
   });
 
   it("BCS does not branch when carry is clear", () => {
-    cpu.registers.STATUS.setFlag(Flag.CARRY, false);
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_CARRY_SET, 0x02]));
 
-    cpu.loadProgram([Opcode.BRANCH_IF_CARRY_SET, 0x02]);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, false);
 
     const initialPC = cpu.registers.PC;
     const initialCycles = cpu.cycles;
@@ -40,22 +37,21 @@ describe("BCS instruction integration tests", () => {
   });
 
   it("BCS supports negative offset (backward branch)", () => {
+    // -2 em signed (0xFE)
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_CARRY_SET, 0xfe]));
+
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
 
-    // -2 em signed (0xFE)
-    cpu.loadProgram([Opcode.BRANCH_IF_CARRY_SET, 0xfe]);
-
     const initialPC = cpu.registers.PC;
-
     cpu.step();
 
     expect(cpu.registers.PC).toBe(initialPC + 2 - 2);
   });
 
   it("BCS adds 1 extra cycle when branch crosses page", () => {
-    cpu.registers.STATUS.setFlag(Flag.CARRY, true);
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_CARRY_SET, 0x02], 0x80fd));
 
-    cpu.loadProgram([Opcode.BRANCH_IF_CARRY_SET, 0x02], 0x80fd);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, true);
 
     const initialCycles = cpu.cycles;
 
@@ -65,9 +61,9 @@ describe("BCS instruction integration tests", () => {
   });
 
   it("BCS does not add page cycle if branch not taken", () => {
-    cpu.registers.STATUS.setFlag(Flag.CARRY, false);
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_CARRY_SET, 0x02], 0x80fd));
 
-    cpu.loadProgram([Opcode.BRANCH_IF_CARRY_SET, 0x02], 0x20fd);
+    cpu.registers.STATUS.setFlag(Flag.CARRY, false);
 
     const initialCycles = cpu.cycles;
 

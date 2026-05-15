@@ -18,7 +18,7 @@ export class CompareInstruction implements Instruction {
     const { address, pageCrossed } = this.config.getAddress(cpu);
 
     const register = cpu.registers[this.config.register];
-    const valueMemory = cpu.memory.read(address);
+    const valueMemory = cpu.read(address);
 
     const result = (register - valueMemory) & 0xff;
 

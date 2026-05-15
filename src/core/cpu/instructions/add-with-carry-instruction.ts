@@ -14,7 +14,7 @@ export class AddWithCarryInstruction implements Instruction {
 
   execute(cpu: CPU) {
     const { address, pageCrossed } = this.config.getAddress(cpu);
-    const value = cpu.memory.read(address);
+    const value = cpu.read(address);
 
     const A = cpu.registers.A;
     const carryIn = cpu.registers.STATUS.is(Flag.CARRY) ? 1 : 0;

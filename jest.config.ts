@@ -2,7 +2,7 @@ import type { JestConfigWithTsJest } from "ts-jest";
 
 const config: JestConfigWithTsJest = {
   preset: "ts-jest",
-  // collectCoverage: true,
+  testEnvironment: "node",
   coverageDirectory: "coverage",
   coverageProvider: "v8",
 };

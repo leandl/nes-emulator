@@ -1,19 +1,18 @@
 import { CPU } from "../../../../../core/cpu";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("TYA instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("TYA transfers Y to Accumulator, updates flags and consumes 2 cycles", () => {
     // Valor normal
+    cpu = createCPU(new FakeRom([Opcode.TRANSFER_Y_REGISTER_TO_ACCUMULATOR]), {
+      Y: 0x42,
+    });
     cpu.registers.Y = 0x42;
-    cpu.loadProgram([Opcode.TRANSFER_Y_REGISTER_TO_ACCUMULATOR]);
 
     let initialCycles = cpu.cycles;
 
@@ -25,8 +24,13 @@ describe("TYA instruction integration tests", () => {
     expect(cpu.cycles - initialCycles).toBe(2);
 
     // Zero flag
+    cpu = createCPU(
+      new FakeRom([Opcode.TRANSFER_Y_REGISTER_TO_ACCUMULATOR], 0x8001),
+      {
+        Y: 0x00,
+      },
+    );
     cpu.registers.Y = 0x00;
-    cpu.loadProgram([Opcode.TRANSFER_Y_REGISTER_TO_ACCUMULATOR], 0x8001);
 
     initialCycles = cpu.cycles;
 
@@ -38,8 +42,12 @@ describe("TYA instruction integration tests", () => {
     expect(cpu.cycles - initialCycles).toBe(2);
 
     // Negative flag
-    cpu.registers.Y = 0x80;
-    cpu.loadProgram([Opcode.TRANSFER_Y_REGISTER_TO_ACCUMULATOR], 0x8002);
+    cpu = createCPU(
+      new FakeRom([Opcode.TRANSFER_Y_REGISTER_TO_ACCUMULATOR], 0x8002),
+      {
+        Y: 0x80,
+      },
+    );
 
     initialCycles = cpu.cycles;
 

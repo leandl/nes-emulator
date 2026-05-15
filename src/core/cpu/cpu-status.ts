@@ -44,8 +44,9 @@ export class CPUStatus {
   }
 
   updateZeroAndNegative(value: number) {
-    this.setFlag(Flag.ZERO, value === 0);
-    this.setFlag(Flag.NEGATIVE, (value & Flag.NEGATIVE) !== 0);
+    const valueCleaned = value & 0xff;
+    this.setFlag(Flag.ZERO, valueCleaned === 0);
+    this.setFlag(Flag.NEGATIVE, (valueCleaned & Flag.NEGATIVE) !== 0);
   }
 
   reset() {

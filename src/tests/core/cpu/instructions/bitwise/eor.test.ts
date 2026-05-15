@@ -1,19 +1,19 @@
 import { CPU } from "../../../../../core/cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 
 describe("EOR instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("EOR immediate applies bitwise XOR and sets flags, consumes 2 cycles", () => {
+    cpu = createCPU(
+      new FakeRom([Opcode.BITWISE_EXCLUSIVE_OR_IMMEDIATE, 0b10101010]),
+    );
+
     cpu.registers.A = 0b11110000;
 
-    cpu.loadProgram([Opcode.BITWISE_EXCLUSIVE_OR_IMMEDIATE, 0b10101010]);
     let initialCycles = cpu.cycles;
     cpu.step();
 
@@ -22,8 +22,12 @@ describe("EOR instruction integration tests", () => {
     expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);
     expect(cpu.cycles - initialCycles).toBe(2);
 
+    cpu = createCPU(
+      new FakeRom([Opcode.BITWISE_EXCLUSIVE_OR_IMMEDIATE, 0b11111111]),
+    );
+
     cpu.registers.A = 0b11111111;
-    cpu.loadProgram([Opcode.BITWISE_EXCLUSIVE_OR_IMMEDIATE, 0b11111111]);
+
     initialCycles = cpu.cycles;
     cpu.step();
 
@@ -34,10 +38,11 @@ describe("EOR instruction integration tests", () => {
   });
 
   it("EOR zero page, consumes 3 cycles", () => {
-    cpu.registers.A = 0b11001100;
-    cpu.memory.write(0x0010, 0b10101010);
+    cpu = createCPU(new FakeRom([Opcode.BITWISE_EXCLUSIVE_OR_ZERO_PAGE, 0x10]));
 
-    cpu.loadProgram([Opcode.BITWISE_EXCLUSIVE_OR_ZERO_PAGE, 0x10]);
+    cpu.registers.A = 0b11001100;
+    cpu.write(0x0010, 0b10101010);
+
     const initialCycles = cpu.cycles;
 
     cpu.step();
@@ -47,14 +52,16 @@ describe("EOR instruction integration tests", () => {
   });
 
   it("EOR zero page X, consumes 4 cycles", () => {
+    cpu = createCPU(
+      new FakeRom([Opcode.BITWISE_EXCLUSIVE_OR_ZERO_PAGE_X, 0x10]),
+    );
+
     cpu.registers.A = 0b11110000;
     cpu.registers.X = 0x05;
 
-    cpu.memory.write(0x0015, 0b00001111);
+    cpu.write(0x0015, 0b00001111);
 
-    cpu.loadProgram([Opcode.BITWISE_EXCLUSIVE_OR_ZERO_PAGE_X, 0x10]);
     const initialCycles = cpu.cycles;
-
     cpu.step();
 
     expect(cpu.registers.A).toBe(0b11111111);
@@ -62,13 +69,14 @@ describe("EOR instruction integration tests", () => {
   });
 
   it("EOR absolute, consumes 4 cycles", () => {
+    cpu = createCPU(
+      new FakeRom([Opcode.BITWISE_EXCLUSIVE_OR_ABSOLUTE, 0x00, 0x10]),
+    );
+
     cpu.registers.A = 0b10101010;
+    cpu.write(0x1000, 0b11111111);
 
-    cpu.memory.write(0x2000, 0b11111111);
-
-    cpu.loadProgram([Opcode.BITWISE_EXCLUSIVE_OR_ABSOLUTE, 0x00, 0x20]);
     const initialCycles = cpu.cycles;
-
     cpu.step();
 
     expect(cpu.registers.A).toBe(0b01010101);
@@ -76,12 +84,15 @@ describe("EOR instruction integration tests", () => {
   });
 
   it("EOR absolute X, consumes 4 cycles (+1 if page crossed)", () => {
+    cpu = createCPU(
+      new FakeRom([Opcode.BITWISE_EXCLUSIVE_OR_ABSOLUTE_X, 0x00, 0x10]),
+    );
+
     cpu.registers.A = 0b00001111;
     cpu.registers.X = 0x03;
 
-    cpu.memory.write(0x2003, 0b11110000);
+    cpu.write(0x1003, 0b11110000);
 
-    cpu.loadProgram([Opcode.BITWISE_EXCLUSIVE_OR_ABSOLUTE_X, 0x00, 0x20]);
     const initialCycles = cpu.cycles;
 
     cpu.step();
@@ -91,15 +102,17 @@ describe("EOR instruction integration tests", () => {
   });
 
   it("EOR absolute X adds 1 cycle when page is crossed", () => {
+    cpu = createCPU(
+      new FakeRom([Opcode.BITWISE_EXCLUSIVE_OR_ABSOLUTE_X, 0xff, 0x10]),
+    );
+
     cpu.registers.A = 0b11110000;
     cpu.registers.X = 0x01;
 
-    // 0x20FF + 0x01 = 0x2100 (page cross)
-    cpu.memory.write(0x2100, 0b10101010);
+    // 0x10FF + 0x01 = 0x1100 (page cross)
+    cpu.write(0x1100, 0b10101010);
 
-    cpu.loadProgram([Opcode.BITWISE_EXCLUSIVE_OR_ABSOLUTE_X, 0xff, 0x20]);
     const initialCycles = cpu.cycles;
-
     cpu.step();
 
     expect(cpu.registers.A).toBe(0b01011010);
@@ -107,28 +120,32 @@ describe("EOR instruction integration tests", () => {
   });
 
   it("EOR absolute Y, consumes 4 cycles (+1 if page crossed)", () => {
+    cpu = createCPU(
+      new FakeRom([Opcode.BITWISE_EXCLUSIVE_OR_ABSOLUTE_Y, 0x00, 0x10]),
+    );
+
     cpu.registers.A = 0b11111111;
     cpu.registers.Y = 0x02;
+    cpu.write(0x1002, 0b11110000);
 
-    cpu.memory.write(0x2002, 0b11110000);
-
-    cpu.loadProgram([Opcode.BITWISE_EXCLUSIVE_OR_ABSOLUTE_Y, 0x00, 0x20]);
     const initialCycles = cpu.cycles;
-
     cpu.step();
 
     expect(cpu.registers.A).toBe(0b00001111);
     expect(cpu.cycles - initialCycles).toBe(4);
   });
+
   it("EOR absolute Y adds 1 cycle when page is crossed", () => {
+    cpu = createCPU(
+      new FakeRom([Opcode.BITWISE_EXCLUSIVE_OR_ABSOLUTE_Y, 0xff, 0x10]),
+    );
+
     cpu.registers.A = 0b11111111;
     cpu.registers.Y = 0x01;
 
-    cpu.memory.write(0x2100, 0b11110000);
+    cpu.write(0x1100, 0b11110000);
 
-    cpu.loadProgram([Opcode.BITWISE_EXCLUSIVE_OR_ABSOLUTE_Y, 0xff, 0x20]);
     const initialCycles = cpu.cycles;
-
     cpu.step();
 
     expect(cpu.registers.A).toBe(0b00001111);
@@ -136,14 +153,16 @@ describe("EOR instruction integration tests", () => {
   });
 
   it("EOR (indirect,X), consumes 6 cycles", () => {
+    cpu = createCPU(
+      new FakeRom([Opcode.BITWISE_EXCLUSIVE_OR_INDIRECT_X, 0x10]),
+    );
+
     cpu.registers.A = 0b10101010;
     cpu.registers.X = 0x04;
+    cpu.write(0x14, 0x00);
+    cpu.write(0x15, 0x10);
+    cpu.write(0x1000, 0b11111111);
 
-    cpu.memory.write(0x14, 0x00);
-    cpu.memory.write(0x15, 0x20);
-    cpu.memory.write(0x2000, 0b11111111);
-
-    cpu.loadProgram([Opcode.BITWISE_EXCLUSIVE_OR_INDIRECT_X, 0x10]);
     const initialCycles = cpu.cycles;
 
     cpu.step();
@@ -153,14 +172,17 @@ describe("EOR instruction integration tests", () => {
   });
 
   it("EOR (indirect),Y, consumes 5 cycles (+1 if page crossed)", () => {
+    cpu = createCPU(
+      new FakeRom([Opcode.BITWISE_EXCLUSIVE_OR_INDIRECT_Y, 0x10]),
+    );
+
     cpu.registers.A = 0b00001111;
     cpu.registers.Y = 0x01;
 
-    cpu.memory.write(0x10, 0x00);
-    cpu.memory.write(0x11, 0x20);
-    cpu.memory.write(0x2001, 0b11110000);
+    cpu.write(0x10, 0x00);
+    cpu.write(0x11, 0x10);
+    cpu.write(0x1001, 0b11110000);
 
-    cpu.loadProgram([Opcode.BITWISE_EXCLUSIVE_OR_INDIRECT_Y, 0x10]);
     const initialCycles = cpu.cycles;
 
     cpu.step();
@@ -170,17 +192,20 @@ describe("EOR instruction integration tests", () => {
   });
 
   it("EOR (indirect),Y adds 1 cycle when page is crossed", () => {
+    cpu = createCPU(
+      new FakeRom([Opcode.BITWISE_EXCLUSIVE_OR_INDIRECT_Y, 0x10]),
+    );
+
     cpu.registers.A = 0b00001111;
     cpu.registers.Y = 0x01;
 
-    // ponteiro -> 0x20FF
-    cpu.memory.write(0x10, 0xff);
-    cpu.memory.write(0x11, 0x20);
+    // ponteiro -> 0x10FF
+    cpu.write(0x10, 0xff);
+    cpu.write(0x11, 0x10);
 
-    // 0x20FF + 0x01 = 0x2100
-    cpu.memory.write(0x2100, 0b11110000);
+    // 0x10FF + 0x01 = 0x1100
+    cpu.write(0x1100, 0b11110000);
 
-    cpu.loadProgram([Opcode.BITWISE_EXCLUSIVE_OR_INDIRECT_Y, 0x10]);
     const initialCycles = cpu.cycles;
 
     cpu.step();

@@ -1,20 +1,17 @@
 import { CPU } from "../../../../../core/cpu";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("BVS instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("BVS branches when overflow flag is set", () => {
-    cpu.registers.STATUS.setFlag(Flag.OVERFLOW, true);
-
     // offset +2
-    cpu.loadProgram([Opcode.BRANCH_IF_OVERFLOW_SET, 0x02]);
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_OVERFLOW_SET, 0x02]));
+
+    cpu.registers.STATUS.setFlag(Flag.OVERFLOW, true);
 
     const initialPC = cpu.registers.PC;
     const initialCycles = cpu.cycles;
@@ -26,9 +23,9 @@ describe("BVS instruction integration tests", () => {
   });
 
   it("BVS does not branch when overflow flag is clear", () => {
-    cpu.registers.STATUS.setFlag(Flag.OVERFLOW, false);
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_OVERFLOW_SET, 0x02]));
 
-    cpu.loadProgram([Opcode.BRANCH_IF_OVERFLOW_SET, 0x02]);
+    cpu.registers.STATUS.setFlag(Flag.OVERFLOW, false);
 
     const initialPC = cpu.registers.PC;
     const initialCycles = cpu.cycles;
@@ -40,11 +37,10 @@ describe("BVS instruction integration tests", () => {
   });
 
   it("BVS supports negative offset (backward branch)", () => {
-    cpu.registers.STATUS.setFlag(Flag.OVERFLOW, true);
-
     // -2 (0xFE signed)
-    cpu.loadProgram([Opcode.BRANCH_IF_OVERFLOW_SET, 0xfe]);
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_OVERFLOW_SET, 0xfe]));
 
+    cpu.registers.STATUS.setFlag(Flag.OVERFLOW, true);
     const initialPC = cpu.registers.PC;
 
     cpu.step();
@@ -53,10 +49,9 @@ describe("BVS instruction integration tests", () => {
   });
 
   it("BVS adds 1 extra cycle when branch crosses page", () => {
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_OVERFLOW_SET, 0x02], 0x80fd));
+
     cpu.registers.STATUS.setFlag(Flag.OVERFLOW, true);
-
-    cpu.loadProgram([Opcode.BRANCH_IF_OVERFLOW_SET, 0x02], 0x80fd);
-
     const initialCycles = cpu.cycles;
 
     cpu.step();
@@ -65,10 +60,9 @@ describe("BVS instruction integration tests", () => {
   });
 
   it("BVS does not add page cycle if branch not taken", () => {
+    cpu = createCPU(new FakeRom([Opcode.BRANCH_IF_OVERFLOW_SET, 0x02], 0x80fd));
+
     cpu.registers.STATUS.setFlag(Flag.OVERFLOW, false);
-
-    cpu.loadProgram([Opcode.BRANCH_IF_OVERFLOW_SET, 0x02], 0x20fd);
-
     const initialCycles = cpu.cycles;
 
     cpu.step();

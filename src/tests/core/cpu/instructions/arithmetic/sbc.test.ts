@@ -1,20 +1,17 @@
 import { CPU } from "../../../../../core/cpu";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("SBC instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("SBC immediate (2 cycles)", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]));
+
     cpu.registers.A = 0x10;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]);
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -26,11 +23,11 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC zero page (3 cycles)", () => {
-    cpu.memory.write(0x10, 0x05);
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_ZERO_PAGE, 0x10]));
+
+    cpu.write(0x10, 0x05);
     cpu.registers.A = 0x10;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_ZERO_PAGE, 0x10]);
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -40,12 +37,14 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC zero page,X (4 cycles)", () => {
+    cpu = createCPU(
+      new FakeRom([Opcode.SUBTRACT_WITH_CARRY_ZERO_PAGE_X, 0x10]),
+    );
+
     cpu.registers.X = 0x01;
-    cpu.memory.write(0x11, 0x05);
+    cpu.write(0x11, 0x05);
     cpu.registers.A = 0x10;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_ZERO_PAGE_X, 0x10]);
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -55,11 +54,13 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC absolute (4 cycles)", () => {
-    cpu.memory.write(0x1234, 0x05);
+    cpu = createCPU(
+      new FakeRom([Opcode.SUBTRACT_WITH_CARRY_ABSOLUTE, 0x34, 0x12]),
+    );
+
+    cpu.write(0x1234, 0x05);
     cpu.registers.A = 0x10;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_ABSOLUTE, 0x34, 0x12]);
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -69,12 +70,14 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC absolute,X without page cross (4 cycles)", () => {
+    cpu = createCPU(
+      new FakeRom([Opcode.SUBTRACT_WITH_CARRY_ABSOLUTE_X, 0x00, 0x11]),
+    );
+
     cpu.registers.X = 0x01;
-    cpu.memory.write(0x2001, 0x05);
+    cpu.write(0x1101, 0x05);
     cpu.registers.A = 0x10;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_ABSOLUTE_X, 0x00, 0x20]);
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -84,12 +87,14 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC absolute,X with page cross (5 cycles)", () => {
+    cpu = createCPU(
+      new FakeRom([Opcode.SUBTRACT_WITH_CARRY_ABSOLUTE_X, 0xff, 0x11]),
+    );
+
     cpu.registers.X = 0x01;
-    cpu.memory.write(0x2100, 0x05);
+    cpu.write(0x1200, 0x05);
     cpu.registers.A = 0x10;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_ABSOLUTE_X, 0xff, 0x20]);
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -99,17 +104,15 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC (indirect,X) (6 cycles)", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_INDIRECT_X, 0x10]));
+
+    cpu.write(0x14, 0x00);
+    cpu.write(0x15, 0x11);
+    cpu.write(0x1100, 0x05);
+
     cpu.registers.X = 0x04;
-
-    cpu.memory.write(0x14, 0x00);
-    cpu.memory.write(0x15, 0x30);
-
-    cpu.memory.write(0x3000, 0x05);
-
     cpu.registers.A = 0x10;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_INDIRECT_X, 0x10]);
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -119,17 +122,16 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC (indirect),Y without page cross (5 cycles)", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_INDIRECT_Y, 0x10]));
+
+    cpu.write(0x10, 0x00);
+    cpu.write(0x11, 0x11);
+
+    cpu.write(0x1101, 0x05);
+
     cpu.registers.Y = 0x01;
-
-    cpu.memory.write(0x10, 0x00);
-    cpu.memory.write(0x11, 0x20);
-
-    cpu.memory.write(0x2001, 0x05);
-
     cpu.registers.A = 0x10;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_INDIRECT_Y, 0x10]);
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -139,17 +141,17 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC (indirect),Y with page cross (6 cycles)", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_INDIRECT_Y, 0x10]));
+
     cpu.registers.Y = 0x01;
 
-    cpu.memory.write(0x10, 0xff);
-    cpu.memory.write(0x11, 0x20);
+    cpu.write(0x10, 0xff);
+    cpu.write(0x11, 0x10);
 
-    cpu.memory.write(0x2100, 0x05);
+    cpu.write(0x1100, 0x05);
 
     cpu.registers.A = 0x10;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_INDIRECT_Y, 0x10]);
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -159,10 +161,10 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC subtracts memory from accumulator (no borrow)", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]));
+
     cpu.registers.A = 0x10;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true); // sem borrow
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]);
 
     cpu.step();
 
@@ -173,10 +175,10 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC includes borrow when carry is clear", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]));
+
     cpu.registers.A = 0x10;
     cpu.registers.STATUS.setFlag(Flag.CARRY, false); // com borrow
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]);
 
     cpu.step();
 
@@ -184,10 +186,10 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC wraps underflow (0x00 - 0x01)", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x01]));
+
     cpu.registers.A = 0x00;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x01]);
 
     cpu.step();
 
@@ -197,10 +199,10 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC sets ZERO flag", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]));
+
     cpu.registers.A = 0x05;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x05]);
 
     cpu.step();
 
@@ -210,10 +212,10 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC sets NEGATIVE flag", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x02]));
+
     cpu.registers.A = 0x01;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x02]);
 
     cpu.step();
 
@@ -222,13 +224,15 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC sets OVERFLOW when positive - negative = negative", () => {
+    cpu = createCPU(
+      new FakeRom([
+        Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE,
+        0xb0, // negativo
+      ]),
+    );
+
     cpu.registers.A = 0x50; // positivo
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([
-      Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE,
-      0xb0, // negativo
-    ]);
 
     cpu.step();
 
@@ -237,13 +241,15 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC sets OVERFLOW when negative - positive = positive", () => {
+    cpu = createCPU(
+      new FakeRom([
+        Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE,
+        0x10, // positivo
+      ]),
+    );
+
     cpu.registers.A = 0x90; // negativo
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([
-      Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE,
-      0x10, // positivo
-    ]);
 
     cpu.step();
 
@@ -255,7 +261,7 @@ describe("SBC instruction integration tests", () => {
     cpu.registers.A = 0x50;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
 
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x10]);
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x10]));
 
     cpu.step();
 
@@ -263,10 +269,10 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC keeps CARRY set when no borrow occurs", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x10]));
+
     cpu.registers.A = 0x20;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x10]);
 
     cpu.step();
 
@@ -275,10 +281,10 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC clears CARRY when borrow occurs", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x20]));
+
     cpu.registers.A = 0x10;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x20]);
 
     cpu.step();
 
@@ -287,10 +293,10 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC sets ZERO and keeps CARRY when result is exact zero", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x01]));
+
     cpu.registers.A = 0x01;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x01]);
 
     cpu.step();
 
@@ -300,10 +306,10 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC sets NEGATIVE and clears CARRY on underflow", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x02]));
+
     cpu.registers.A = 0x00;
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x02]);
 
     cpu.step();
 
@@ -313,10 +319,10 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC sets OVERFLOW when negative - negative = positive", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0xf0])); // negativo
+
     cpu.registers.A = 0x90; // negativo
     cpu.registers.STATUS.setFlag(Flag.CARRY, true);
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0xf0]); // negativo
 
     cpu.step();
 
@@ -325,10 +331,10 @@ describe("SBC instruction integration tests", () => {
   });
 
   it("SBC sets multiple flags correctly in complex case", () => {
+    cpu = createCPU(new FakeRom([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x01]));
+
     cpu.registers.A = 0x80; // negativo
     cpu.registers.STATUS.setFlag(Flag.CARRY, false); // força borrow
-
-    cpu.loadProgram([Opcode.SUBTRACT_WITH_CARRY_IMMEDIATE, 0x01]);
 
     cpu.step();
 

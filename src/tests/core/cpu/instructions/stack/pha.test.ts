@@ -1,25 +1,23 @@
 import { CPU } from "../../../../../core/cpu";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("PHA instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("PHA pushes accumulator to stack and decrements SP, consumes 3 cycles", () => {
-    cpu.registers.A = 0x42;
-    cpu.registers.SP = 0xff;
+    cpu = createCPU(new FakeRom([Opcode.STACK_PUSH_ACCUMULATOR]), {
+      A: 0x42,
+      SP: 0xff,
+    });
 
-    cpu.loadProgram([Opcode.STACK_PUSH_ACCUMULATOR]);
     const initialCycles = cpu.cycles;
 
     cpu.step();
 
     // valor foi empilhado
-    expect(cpu.memory.read(0x01ff)).toBe(0x42);
+    expect(cpu.read(0x01ff)).toBe(0x42);
 
     // SP decrementado
     expect(cpu.registers.SP).toBe(0xfe);
@@ -29,24 +27,24 @@ describe("PHA instruction integration tests", () => {
   });
 
   it("PHA uses correct stack address based on SP", () => {
-    cpu.registers.A = 0x99;
-    cpu.registers.SP = 0x80;
-
-    cpu.loadProgram([Opcode.STACK_PUSH_ACCUMULATOR]);
+    cpu = createCPU(new FakeRom([Opcode.STACK_PUSH_ACCUMULATOR]), {
+      A: 0x99,
+      SP: 0x80,
+    });
 
     cpu.step();
 
-    expect(cpu.memory.read(0x0180)).toBe(0x99);
+    expect(cpu.read(0x0180)).toBe(0x99);
     expect(cpu.registers.SP).toBe(0x7f);
   });
 
   it("PHA does not modify flags", () => {
+    cpu = createCPU(new FakeRom([Opcode.STACK_PUSH_ACCUMULATOR]));
+
     cpu.registers.A = 0x10;
 
     // seta flags manualmente
     cpu.registers.STATUS.raw = 0b11111111;
-
-    cpu.loadProgram([Opcode.STACK_PUSH_ACCUMULATOR]);
 
     cpu.step();
 
@@ -54,15 +52,15 @@ describe("PHA instruction integration tests", () => {
   });
 
   it("PHA wraps stack pointer (underflow behavior)", () => {
+    cpu = createCPU(new FakeRom([Opcode.STACK_PUSH_ACCUMULATOR]));
+
     cpu.registers.A = 0x55;
     cpu.registers.SP = 0x00;
-
-    cpu.loadProgram([Opcode.STACK_PUSH_ACCUMULATOR]);
 
     cpu.step();
 
     // escreve em 0x0100
-    expect(cpu.memory.read(0x0100)).toBe(0x55);
+    expect(cpu.read(0x0100)).toBe(0x55);
 
     // wrap: 0x00 -> 0xFF
     expect(cpu.registers.SP).toBe(0xff);

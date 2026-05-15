@@ -18,8 +18,8 @@ export class BreakInstruction implements Instruction {
     cpu.registers.STATUS.setFlag(Flag.INTERRUPT_DISABLE, true);
 
     // vetor IRQ
-    const low = cpu.memory.read(0xfffe);
-    const high = cpu.memory.read(0xffff);
+    const low = cpu.read(0xfffe);
+    const high = cpu.read(0xffff);
 
     cpu.registers.PC = (high << 8) | low;
 

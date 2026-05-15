@@ -1,19 +1,16 @@
 import { CPU } from "../../../../../core/cpu";
+import { createCPU } from "../../../../../core/cpu/factories/create-cpu";
 import { Flag } from "../../../../../core/cpu/flag";
-import { allInstruction } from "../../../../../core/cpu/factories/instructions/all-instructions";
 import { Opcode } from "../../../../../core/cpu/opcode";
+import { FakeRom } from "../../../../../core/rom/fake-rom";
 
 describe("TSX instruction integration tests", () => {
   let cpu: CPU;
 
-  beforeEach(() => {
-    cpu = new CPU(allInstruction);
-  });
-
   it("TSX transfers Stack Pointer to X, updates flags and consumes 2 cycles", () => {
     // Valor normal
+    cpu = createCPU(new FakeRom([Opcode.TRANSFER_STACK_POINTER_TO_X_REGISTER]));
     cpu.registers.SP = 0x42;
-    cpu.loadProgram([Opcode.TRANSFER_STACK_POINTER_TO_X_REGISTER]);
 
     let initialCycles = cpu.cycles;
 
@@ -25,8 +22,10 @@ describe("TSX instruction integration tests", () => {
     expect(cpu.cycles - initialCycles).toBe(2);
 
     // Zero flag
+    cpu = createCPU(
+      new FakeRom([Opcode.TRANSFER_STACK_POINTER_TO_X_REGISTER], 0x8001),
+    );
     cpu.registers.SP = 0x00;
-    cpu.loadProgram([Opcode.TRANSFER_STACK_POINTER_TO_X_REGISTER], 0x8001);
 
     initialCycles = cpu.cycles;
 
@@ -38,8 +37,10 @@ describe("TSX instruction integration tests", () => {
     expect(cpu.cycles - initialCycles).toBe(2);
 
     // Negative flag
+    cpu = createCPU(
+      new FakeRom([Opcode.TRANSFER_STACK_POINTER_TO_X_REGISTER], 0x8002),
+    );
     cpu.registers.SP = 0x80;
-    cpu.loadProgram([Opcode.TRANSFER_STACK_POINTER_TO_X_REGISTER], 0x8002);
 
     initialCycles = cpu.cycles;
 
