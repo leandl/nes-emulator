@@ -11,7 +11,7 @@ describe("PLA instruction integration tests", () => {
     cpu = createCPU(new FakeRom([Opcode.STACK_PULL_ACCUMULATOR]));
 
     cpu.registers.SP = 0xfe;
-    // valor na stack (SP + 1 = 0xff → 0x01ff)
+    // valor na stack (SP + 1 = 0xff -> 0x01ff)
     cpu.write(0x01ff, 0x42);
 
     const initialCycles = cpu.cycles;
@@ -70,7 +70,7 @@ describe("PLA instruction integration tests", () => {
 
     cpu.registers.SP = 0xff;
 
-    // SP++ → 0x00 → endereço 0x0100
+    // SP++ -> 0x00 -> endereço 0x0100
     cpu.write(0x0100, 0x55);
 
     cpu.step();

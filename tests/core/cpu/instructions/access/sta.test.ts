@@ -82,7 +82,7 @@ describe("STA instruction integration tests", () => {
     cpu.registers.X = 0x04;
 
     cpu.write(0x14, 0x00); // low
-    cpu.write(0x15, 0x11); // high → endereço final 0x1100
+    cpu.write(0x15, 0x11); // high -> endereço final 0x1100
 
     const initialCycles = cpu.cycles;
     cpu.step();
@@ -97,7 +97,7 @@ describe("STA instruction integration tests", () => {
     cpu.registers.A = 0xbb;
     cpu.registers.Y = 0x01;
     cpu.write(0x10, 0x00); // low
-    cpu.write(0x11, 0x11); // high → 0x1100 + Y = 0x1101
+    cpu.write(0x11, 0x11); // high -> 0x1100 + Y = 0x1101
 
     const initialCycles = cpu.cycles;
     cpu.step();

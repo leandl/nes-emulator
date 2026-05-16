@@ -87,7 +87,7 @@ describe("CPX instruction integration tests", () => {
 
     cpu.step();
 
-    // 0x00 - 0x01 = 0xFF → bit 7 = 1
+    // 0x00 - 0x01 = 0xFF -> bit 7 = 1
     expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(true);
     expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false);
     expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(false);

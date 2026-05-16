@@ -31,7 +31,7 @@ describe("ROR instruction integration tests", () => {
     cpu.step();
 
     // esperado:
-    // carry entra no bit 7 → 10000001 (0x81)
+    // carry entra no bit 7 -> 10000001 (0x81)
     expect(cpu.registers.A).toBe(0x81);
     expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false); // bit0 original era 0
     expect(cpu.cycles - initialCycles).toBe(2);
