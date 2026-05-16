@@ -1,15 +1,13 @@
-import { CPU } from "..";
 import { Bus } from "../../bus";
 import { Cartridge } from "../../cartridge";
+import { CPU } from "../../cpu";
+import { allInstructions } from "../../cpu/factories/instructions/all-instructions";
 import { PPU } from "../../ppu";
 import { allRegisters } from "../../ppu/factories/all-registers";
 import { Rom } from "../../rom";
-import { allInstructions } from "./instructions/all-instructions";
+import { FakeRom } from "../../rom/fake-rom";
 
-export function createCPU(
-  rom: Rom,
-  startRegisters?: Partial<CPU["registers"]>,
-): CPU {
+export function createCPUAndPPU(rom: Rom = new FakeRom([])): [CPU, PPU] {
   const cartridge = new Cartridge(rom);
   const ppu = new PPU(cartridge, allRegisters);
   const bus = new Bus(cartridge, ppu);
@@ -18,9 +16,5 @@ export function createCPU(
 
   cpu.reset();
 
-  if (startRegisters) {
-    Object.assign(cpu.registers, startRegisters);
-  }
-
-  return cpu;
+  return [cpu, ppu];
 }

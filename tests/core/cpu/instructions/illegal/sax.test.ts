@@ -74,7 +74,7 @@ describe("SAX instruction integration tests", () => {
     const result = cpu.registers.A & cpu.registers.X;
 
     cpu.write(0x14, 0x00); // low
-    cpu.write(0x15, 0x11); // high → endereço final 0x1100
+    cpu.write(0x15, 0x11); // high -> endereço final 0x1100
 
     const initialCycles = cpu.cycles;
     cpu.step();

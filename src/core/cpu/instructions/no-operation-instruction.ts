@@ -15,7 +15,7 @@ export class NoOperationInstruction implements Instruction {
   execute(cpu: CPU) {
     const cycles = this.config?.cycles ?? DEFAULT_NO_OPERATION_CYCLES;
 
-    // NOP ilegal com addressing → precisa fazer leitura dummy
+    // NOP ilegal com addressing -> precisa fazer leitura dummy
     if (this.config?.getAddress) {
       const { address, pageCrossed } = this.config.getAddress(cpu);
 

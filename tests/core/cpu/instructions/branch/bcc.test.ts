@@ -18,7 +18,7 @@ describe("BCC instruction integration tests", () => {
 
     cpu.step();
 
-    // PC já está após leitura → + offset
+    // PC já está após leitura -> + offset
     expect(cpu.registers.PC).toBe(initialPC + 2 + 2);
     expect(cpu.cycles - initialCycles).toBe(3); // 2 + 1 (branch taken)
   });

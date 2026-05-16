@@ -87,7 +87,7 @@ describe("PLP instruction integration tests", () => {
 
     cpu.registers.SP = 0xff;
 
-    // SP++ → 0x00 → 0x0100
+    // SP++ -> 0x00 -> 0x0100
     cpu.write(0x0100, Flag.CARRY);
 
     cpu.step();

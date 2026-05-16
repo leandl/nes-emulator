@@ -32,7 +32,7 @@ describe("ROL instruction integration tests", () => {
 
     // esperado:
     // shift: 10000000
-    // carry entra no bit0 → 10000001 (0x81)
+    // carry entra no bit0 -> 10000001 (0x81)
     expect(cpu.registers.A).toBe(0x81);
     expect(cpu.registers.STATUS.is(Flag.CARRY)).toBe(false); // bit7 original era 0
     expect(cpu.cycles - initialCycles).toBe(2);

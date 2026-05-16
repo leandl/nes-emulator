@@ -20,7 +20,7 @@ describe("BIT instruction integration tests", () => {
     // A não muda
     expect(cpu.registers.A).toBe(0b00110000);
 
-    // A & M = 0 → Z = 1
+    // A & M = 0 -> Z = 1
     expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
 
     // vindo da memória
@@ -55,7 +55,7 @@ describe("BIT instruction integration tests", () => {
 
     expect(cpu.registers.A).toBe(0b00001111);
 
-    // A & M = 0 → Z = 1
+    // A & M = 0 -> Z = 1
     expect(cpu.registers.STATUS.is(Flag.ZERO)).toBe(true);
 
     expect(cpu.registers.STATUS.is(Flag.NEGATIVE)).toBe(false);

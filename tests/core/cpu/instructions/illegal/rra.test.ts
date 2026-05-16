@@ -101,7 +101,7 @@ describe("RRA instruction integration tests", () => {
 
     cpu.step();
 
-    // 0x7f + 0x00 + 1 = 0x80 → overflow
+    // 0x7f + 0x00 + 1 = 0x80 -> overflow
     expect(cpu.registers.STATUS.is(Flag.OVERFLOW)).toBe(true);
   });
 
